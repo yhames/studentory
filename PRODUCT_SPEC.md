@@ -100,6 +100,7 @@ The system contains the following primary domains:
 
 ```text
 Student
+Student Schedule
 Lesson
 Scenario
 Textbook
@@ -112,14 +113,31 @@ Core relationships:
 
 ```text
 Student
- ├── Lessons
- ├── Scenario Progress / Student Scenario Notes
- ├── Textbooks
- ├── Consultations
- └── Todos
+|
++-- Student Schedules
++-- Lessons
++-- Student Scenario Notes
++-- Consultations
++-- Todos
 ```
 
 Teacher materials are primarily teacher-level resources rather than student-level data.
+
+Supporting domain concepts include curriculum stage, curriculum unit, lesson status, preparation status, attendance status, and student textbook usage.
+
+## 5.1 Confirmed Business Rules
+
+The following rules are confirmed for the MVP unless later requirements explicitly change them:
+
+* Student stores `birth_year`, not full date of birth.
+* Any displayed student age is approximate.
+* Student recurring schedules are separate from student basic profile.
+* Lesson records the curriculum progress actually used for that lesson.
+* Lesson generation must not automatically finalize curriculum progress.
+* Base scenarios are reusable and must not be modified for student-specific customization.
+* Student-specific scenario notes are stored separately from base scenarios.
+* Parent consultations should occur approximately once every three months.
+* Teacher materials are teacher-level resources, not student-level data.
 
 ---
 
@@ -142,9 +160,9 @@ A student has:
 * regular consultation date
 * status
 
-The system stores `birth_year` instead of date of birth because full birth date information is not available.
+The system stores `birth_year` as the persistent source data because full date of birth is not available.
 
-Displayed age may be derived from `birth_year` when needed.
+Any displayed age is approximate and derived from `birth_year`.
 
 ## 6.3 Stage
 
@@ -190,7 +208,9 @@ User-facing meanings:
 
 A student's recurring lesson schedule is managed separately from the student's basic profile.
 
-A student may have multiple recurring lesson schedules.
+A student must have at least one recurring lesson schedule while actively receiving lessons.
+
+The model should not prevent multiple recurring schedules, but whether the MVP must support multiple active schedules per student is still an open question.
 
 Each schedule should represent:
 
@@ -201,7 +221,7 @@ Each schedule should represent:
 * effective end date
 * active status
 
-This supports students who have more than one lesson day per week and preserves flexibility for schedule changes over time.
+This separates recurring schedule information from basic student profile information and preserves flexibility for schedule changes over time.
 
 ## 6.6 Student Detail
 
@@ -211,7 +231,7 @@ It should eventually expose relevant information such as:
 
 * basic student information
 * current stage
-* current curriculum progress
+* derived current curriculum progress
 * schedule
 * student notes
 * requests
@@ -242,6 +262,7 @@ Student 1 --- N Lesson
 
 A lesson currently contains:
 
+* lesson status
 * preparation status
 * learning date
 * lesson time
@@ -252,30 +273,48 @@ A lesson currently contains:
 
 ## 7.3 Preparation Status
 
-The current known requirement is whether lesson preparation is complete.
-
-Example concept:
+The MVP preparation model is binary:
 
 ```text
 NOT_PREPARED
 PREPARED
 ```
 
-The final status model is not yet defined.
+Additional preparation states are out of scope unless later requirements require them.
 
 ## 7.4 Lesson Generation
 
 Lessons are actual scheduled or completed lesson instances.
 
-Lessons may be generated from a student's recurring schedule, but they may also be created manually when needed.
+The system must support upcoming lesson visibility based on a student's recurring schedule.
 
-The system should generate only a practical near-future range of lessons instead of creating all future lessons indefinitely.
+Lessons may be created from a student's recurring schedule or created manually when needed.
+
+The exact strategy for creating Lesson instances is not yet finalized.
+
+Lessons may be created on demand, periodically, or through another generation process.
 
 Curriculum progress should not be automatically finalized by lesson generation.
 
 The system may suggest the next curriculum unit, but the teacher confirms the actual curriculum progress recorded on each lesson.
 
-## 7.5 Attendance Status
+## 7.5 Lesson Status
+
+Lesson status represents the lifecycle of the lesson itself.
+
+The MVP lesson status model is:
+
+```text
+SCHEDULED
+COMPLETED
+CANCELED
+```
+
+Rescheduling behavior is not yet finalized.
+
+`RESCHEDULED` should not be treated as a confirmed persistent status until the rescheduling workflow is defined.
+
+## 7.6 Attendance Status
 
 Known attendance states:
 
@@ -284,9 +323,9 @@ PRESENT
 ABSENT
 ```
 
-Additional states such as cancellation or rescheduling are not yet defined.
+Attendance status represents the student's attendance result, not the lesson lifecycle.
 
-## 7.6 Curriculum Progress
+## 7.7 Curriculum Progress
 
 A lesson records the curriculum position used during that lesson.
 
@@ -300,7 +339,9 @@ Examples:
 
 Curriculum progression should eventually connect with scenarios and textbooks.
 
-## 7.7 Lesson Notes
+A student's current curriculum progress should be derived from lesson history, typically from the latest completed lesson, unless a separate progress override is explicitly added later.
+
+## 7.8 Lesson Notes
 
 A teacher can record observations about the lesson.
 
@@ -339,8 +380,10 @@ Conceptually:
 
 ```text
 Stage
-  └── Curriculum Unit
-        └── Scenario
+|
++-- Curriculum Unit
+    |
+    +-- Scenario
 ```
 
 The exact scenario structure is not yet defined.
@@ -359,6 +402,8 @@ Examples:
 * changes in teaching approach
 
 The base scenario should not be modified just because one student requires customization.
+
+This is a business rule: reusable base scenario data and student-specific scenario notes must remain separate.
 
 Conceptually:
 
@@ -389,10 +434,17 @@ Conceptually:
 
 ```text
 Stage
-  └── Textbook
+|
++-- Textbook
 ```
 
 A student may also need to be associated with the textbook currently being used.
+
+Textbook usage and curriculum progress are separate concepts.
+
+Curriculum progress is recorded through lessons.
+
+Student textbook usage may identify the textbook currently used by the student, but the exact tracking model is not yet defined.
 
 The exact textbook data fields are not yet defined.
 
@@ -804,7 +856,7 @@ Teacher
 |   |
 |   +-- Student Scenario Notes
 |   |
-|   +-- Textbook / Curriculum Progress
+|   +-- Student Textbook Usage
 |   |
 |   +-- Todos
 |
@@ -813,6 +865,9 @@ Teacher
 |
 +-- Textbooks
 |   +-- Stage / Curriculum Unit
+|
++-- Curriculum Units
+|   +-- Stage
 |
 +-- Materials
 |
@@ -899,62 +954,52 @@ These may only be introduced when explicitly added to the product scope.
 
 The following requirements still need clarification.
 
-## Student
+Questions are ordered by implementation impact.
 
-* What exactly is the initial consultation workflow?
-* Can an ended student become active again?
+## High Impact
 
-## Curriculum
-
+* Is a student's current curriculum progress always derived from completed lesson history?
+* When should recurring schedules create Lesson instances?
+* How far into the future should Lesson instances be created or displayed?
+* Should lesson generation be on-demand, scheduled, or periodic?
+* What makes a lesson completed: attendance recorded, notes saved, or explicit completion action?
+* How should rescheduling be represented: editing the same lesson or canceling and creating a new lesson?
+* Are cancellation and makeup lessons required for the MVP?
+* Does the MVP need multiple active recurring schedules per student?
 * What do `1-24`, `2-12`, and `3-14` represent?
 * How many curriculum units exist per stage?
 * Is curriculum progression sequential?
 * Can lessons skip or repeat units?
 
-## Lesson
+## Medium Impact
 
-* Can lessons be rescheduled?
-* Are cancellation and makeup lessons required?
 * Can one lesson cover multiple curriculum units?
-* What exactly does `prepared` mean?
-
-## Scenario
-
 * Is there one scenario per curriculum unit?
 * Can multiple scenarios exist for one unit?
 * What data does a scenario contain?
 * How should student-specific scenario notes be structured?
-
-## Textbook
-
+* Is current textbook tracked per student, per curriculum unit, or only by stage?
 * Can one stage have multiple textbooks?
 * Does a textbook map to a stage or individual curriculum units?
 * Is textbook progress tracked per student?
-* Are textbook files stored in the system?
-
-## Consultation
-
-* What information must be recorded during a consultation?
 * How is the next consultation date calculated?
+* What information must be recorded during a consultation?
 * Are reminders required?
 * How early should an upcoming consultation appear?
 
-## Material
+## Lower Impact
 
-* Are files uploaded directly?
-* Are external links sufficient?
-* What categories are needed?
-* Is search required for the first release?
-
-## Todo
-
+* What exactly is the initial consultation workflow?
+* Can an ended student become active again?
+* Are textbook files stored in the system?
+* Are material files uploaded directly?
+* Are external links sufficient for materials?
+* What material categories are needed?
+* Is material search required for the first release?
 * Are todos created manually, automatically, or both?
 * Should consultation deadlines create automatic todos?
 * Should lesson preparation create automatic todos?
 * Do todos require due dates and priorities?
-
-## Users
-
 * Is the first version single-user only?
 * Will multiple teachers eventually use the same system?
 * Is authentication required for the initial version?
