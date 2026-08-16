@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.19.1",
     "fastapi>=0.141.1",
     "pydantic-settings>=2.15.0",
     "sqlmodel>=0.0.39",
@@ -20,3 +21,35 @@ backend = "backend:main"
 [build-system]
 requires = ["uv_build>=0.12.5,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.411",
+    "pytest>=9.1.1",
+    "ruff>=0.16.3",
+]
+
+# Ruff 설정
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+# 코드 품질을 위한 기본 규칙 활성화 (Error, Pyflakes, Isort 등)
+select = ["E", "F", "I", "N", "UP", "B"]
+ignore = []
+
+# Pyright 설정
+[tool.pyright]
+include = ["backend/app"]
+exclude = ["**/__pycache__", ".venv"]
+venvPath = "."
+venv = ".venv" # 가상환경의 타입 힌트를 올바르게 인식하도록 설정
+reportMissingImports = true
+reportMissingTypeStubs = false
+pythonVersion = "3.12"
+
+# Pytest 설정 (테스트 러너)
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
