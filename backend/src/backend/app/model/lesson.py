@@ -2,12 +2,10 @@ from __future__ import annotations
 
 from datetime import date, time
 from enum import StrEnum
-from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Field
 
-if TYPE_CHECKING:
-    from backend.app.model.student import Student, StudentSchedule
+from backend.app.model.base import BaseModel
 
 
 class LessonStatus(StrEnum):
@@ -26,8 +24,7 @@ class AttendanceStatus(StrEnum):
     ABSENT = "ABSENT"
 
 
-class Lesson(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class Lesson(BaseModel, table=True):
     student_id: int = Field(foreign_key="student.id")
     schedule_id: int | None = Field(default=None, foreign_key="studentschedule.id")
     lesson_date: date
@@ -37,6 +34,3 @@ class Lesson(SQLModel, table=True):
     attendance_status: AttendanceStatus | None = None
     curriculum_progress: str | None = None
     special_notes: str | None = None
-
-    student: Student = Relationship(back_populates="lessons")
-    schedule: StudentSchedule | None = Relationship(back_populates="lessons")
