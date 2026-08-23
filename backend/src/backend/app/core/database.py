@@ -43,6 +43,9 @@ def _ensure_sqlite_common_columns() -> None:
         "student": {
             "gender": "VARCHAR(20)",
         },
+        "lesson": {
+            "attitude_notes": "VARCHAR",
+        },
     }
 
     with engine.begin() as connection:
@@ -61,5 +64,12 @@ def _ensure_sqlite_common_columns() -> None:
                     SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP),
                         updated_at = COALESCE(updated_at, CURRENT_TIMESTAMP)
                     """
+                )
+            )
+        if "lesson" in inspector.get_table_names():
+            connection.execute(
+                text(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS uq_lesson_schedule_date "
+                    "ON lesson (schedule_id, lesson_date)"
                 )
             )

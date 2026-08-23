@@ -11,9 +11,9 @@ export function Sidebar() {
         <NavLink to="/students" className={({ isActive }) => (isActive ? 'active' : '')}>
           학생 관리
         </NavLink>
-        <button type="button" disabled>
+        <NavLink to="/lessons" className={({ isActive }) => (isActive ? 'active' : '')}>
           수업 현황
-        </button>
+        </NavLink>
         <button type="button" disabled>
           교재 관리
         </button>

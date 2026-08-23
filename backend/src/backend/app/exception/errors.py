@@ -34,3 +34,11 @@ class StudentScheduleOwnershipError(NotFoundError):
 
 class StudentScheduleValidationError(ValidationError):
     pass
+
+
+class LessonNotFoundError(NotFoundError):
+    detail = "Lesson not found"
+
+
+class LessonValidationError(ValidationError):
+    pass
