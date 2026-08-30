@@ -79,6 +79,8 @@ pnpm e2e
 
 ## LLM 기반 개발 워크플로
 
+전체 루프의 설계, 파일별 책임, 다른 프로젝트용 세팅 절차는 [LOOP_ARCHITECTURE.md](LOOP_ARCHITECTURE.md)를 참고합니다.
+
 저장소 전용 Codex Skill은 `.agents/skills/`에 있습니다.
 
 - `$implement-feature-slice`: 로드맵의 수직 기능 하나를 백엔드부터 UI까지 구현
