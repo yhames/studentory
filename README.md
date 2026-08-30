@@ -47,7 +47,7 @@ pnpm dev
 
 기본 화면 주소는 `http://localhost:5173`입니다. 다른 API 주소를 사용하려면 프론트엔드 환경에 `VITE_API_BASE_URL`을 설정합니다.
 
-Sentry 설정은 [docs/CI_AND_SECURITY.md](docs/CI_AND_SECURITY.md)를 확인합니다. DSN이 비어 있으면 로컬과 CI에서 Sentry는 비활성화됩니다.
+Sentry 설정은 [docs/CI_AND_SECURITY.md](docs/CI_AND_SECURITY.md)를 확인합니다. DSN이 비어 있으면 로컬과 CI에서 Sentry는 비활성화됩니다. 취약점은 공개 Issue 대신 [SECURITY.md](SECURITY.md)의 비공개 신고 절차를 사용합니다.
 
 ## 검증
 

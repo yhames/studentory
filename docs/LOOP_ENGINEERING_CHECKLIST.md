@@ -218,7 +218,7 @@
 
 ### 공개 저장소 문서
 
-- [ ] `SECURITY.md`에 지원 버전과 비공개 취약점 신고 방법을 작성한다.
+- [x] `SECURITY.md`에 지원 버전과 비공개 취약점 신고 방법을 작성한다.
 - [ ] `CONTRIBUTING.md` 추가 여부를 결정한다.
 - [ ] 외부 기여를 받는다면 개발 환경, 검증, Issue/PR 규칙을 작성한다.
 - [ ] 행동강령이 필요한 규모인지 결정한다.
@@ -234,6 +234,8 @@ Issue는 템플릿과 라벨을 먼저 적용한 뒤 생성한다.
 - [x] `OPS-007: 공개 저장소 SECURITY 정책 범위 결정` — [#14](https://github.com/yhames/studentory/issues/14)
   - [x] 유형: Decision
   - [x] 영역: ops
+  - [x] 최신 `main` 지원과 GitHub Private Security Advisory 사용을 승인한다.
+  - [x] root `SECURITY.md`가 backend와 frontend에 적용되는지 resolver로 검증한다.
 - [x] `OPS-005: GitHub Issue 기반 Loop Engineering 확장` — [#11](https://github.com/yhames/studentory/issues/11)
   - [x] 유형: Feature
   - [x] 영역: ops
