@@ -80,8 +80,5 @@ def _ensure_sqlite_common_columns() -> None:
             )
         if "lesson" in inspector.get_table_names():
             connection.execute(
-                text(
-                    "CREATE UNIQUE INDEX IF NOT EXISTS uq_lesson_schedule_date "
-                    "ON lesson (schedule_id, lesson_date)"
-                )
+                text("CREATE UNIQUE INDEX IF NOT EXISTS uq_lesson_schedule_date ON lesson (schedule_id, lesson_date)")
             )

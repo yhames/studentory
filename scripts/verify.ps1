@@ -59,6 +59,7 @@ if ($Scope -in @("all", "backend")) {
     if ($Install) {
         Invoke-Check "Backend dependency sync" $backendPath { uv sync }
     }
+    Invoke-Check "Backend format check" $backendPath { Invoke-BackendTool "ruff" @("format", "--check", ".") }
     Invoke-Check "Backend Ruff" $backendPath { Invoke-BackendTool "ruff" @("check", ".") }
     Invoke-Check "Backend Pyright" $backendPath { Invoke-BackendTool "pyright" }
     Invoke-Check "Backend pytest" $backendPath { Invoke-BackendTool "pytest" }
@@ -70,6 +71,7 @@ if ($Scope -in @("all", "frontend")) {
         Invoke-Check "Frontend dependency install" $frontendPath { pnpm install --frozen-lockfile }
     }
     Invoke-Check "Frontend lint" $frontendPath { pnpm lint }
+    Invoke-Check "Frontend type-check" $frontendPath { pnpm typecheck }
     Invoke-Check "Frontend build" $frontendPath { pnpm build }
 }
 

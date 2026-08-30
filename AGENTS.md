@@ -86,6 +86,7 @@ Before making changes:
 5. Identify affected tests and API consumers.
 6. Make the smallest coherent change.
 7. Verify the result with available project tooling.
+8. Review the complete diff before reporting completion.
 
 For cross-stack features, consider the flow:
 
@@ -319,6 +320,8 @@ Prefer testing behavior rather than implementation details.
 
 Do not disable or remove tests only to make a change pass.
 
+GitHub Actions is the final gate for pushed branches and pull requests. Local checks provide fast feedback but do not replace required CI. Do not report a branch as merge-ready until its required checks pass. If CI cannot be inspected, report it as pending.
+
 ---
 
 ## Documentation
@@ -349,5 +352,6 @@ Before considering a task complete, verify:
 - [ ] Types and schemas are consistent.
 - [ ] Relevant tests pass.
 - [ ] Linting and formatting rules are satisfied.
+- [ ] Required GitHub checks pass, or CI is explicitly reported as pending.
 - [ ] No secrets or credentials were introduced.
 - [ ] Documentation was updated if necessary.

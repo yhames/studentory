@@ -54,6 +54,8 @@ pnpm dev
 powershell -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
+로컬 검증은 빠른 피드백용입니다. 푸시된 브랜치와 Pull Request의 최종 완료 기준은 GitHub Actions의 `Completion gate`입니다. 저장소 보안 설정과 운영 방법은 [docs/CI_AND_SECURITY.md](docs/CI_AND_SECURITY.md)를 확인합니다.
+
 개별 검증 명령은 다음과 같습니다.
 
 ```powershell
@@ -64,6 +66,7 @@ uv run pytest
 
 cd ../frontend
 pnpm lint
+pnpm typecheck
 pnpm build
 ```
 
