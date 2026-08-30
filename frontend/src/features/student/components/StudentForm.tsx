@@ -5,19 +5,19 @@ import { approximateAgeFromBirthYear, birthYearFromAge } from '../utils'
 import type {
   DayOfWeek,
   StudentGender,
-  StudentPayload,
+  StudentFormValues,
   StudentSchedulePayload,
   StudentStage,
   StudentStatus,
 } from '../../../types/students'
 
 interface StudentFormProps {
-  value: StudentPayload
+  value: StudentFormValues
   scheduleValue: StudentSchedulePayload
   mode: 'create' | 'edit'
   submitting: boolean
   error: string | null
-  onChange: (value: StudentPayload) => void
+  onChange: (value: StudentFormValues) => void
   onScheduleChange: (value: StudentSchedulePayload) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   onCancel: () => void

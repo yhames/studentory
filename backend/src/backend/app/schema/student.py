@@ -29,6 +29,9 @@ class StudentBase(BaseModel):
         if value < 1900:
             msg = "birth_year must be 1900 or later"
             raise ValueError(msg)
+        if value > date.today().year:
+            msg = "birth_year must not be in the future"
+            raise ValueError(msg)
         return value
 
 
@@ -64,6 +67,9 @@ class StudentUpdate(BaseModel):
             raise ValueError(msg)
         if value < 1900:
             msg = "birth_year must be 1900 or later"
+            raise ValueError(msg)
+        if value > date.today().year:
+            msg = "birth_year must not be in the future"
             raise ValueError(msg)
         return value
 

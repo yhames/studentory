@@ -20,7 +20,7 @@ import {
 } from '../features/student/utils'
 import type {
   Student,
-  StudentPayload,
+  StudentFormValues,
   StudentSchedule,
   StudentSchedulePayload,
   StudentStage,
@@ -34,7 +34,7 @@ export function StudentPage() {
     Record<number, StudentSchedule[]>
   >({})
   const [studentForm, setStudentForm] =
-    useState<StudentPayload>(emptyStudentForm)
+    useState<StudentFormValues>(emptyStudentForm)
   const [scheduleForm, setScheduleForm] =
     useState<StudentSchedulePayload>(emptyScheduleForm)
   const [loadingStudents, setLoadingStudents] = useState(true)

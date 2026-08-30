@@ -1,2 +1,4 @@
 example/
 .pnpm-store/
+data/*.db
+logs/*.log
