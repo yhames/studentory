@@ -31,7 +31,7 @@ A student management system for teachers who manage students, lessons, teaching 
 
 ## 2.2 Background
 
-The initial user is a teacher working at Kyowon Group.
+The initial user is a teacher.
 
 Student and lesson information is currently managed with Notion.
 
@@ -506,9 +506,9 @@ For example, it is not yet decided whether the next consultation is calculated f
 
 ## 11.1 Description
 
-A `Material` represents educational or training resources provided to teachers by Kyowon Group.
+A `Material` represents educational or training resources provided to teachers.
 
-Kyowon Group periodically conducts teacher training.
+Periodically conducts teacher training.
 
 The system should provide a centralized place to collect and access those materials.
 
