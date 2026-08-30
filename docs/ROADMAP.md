@@ -18,10 +18,16 @@
 | OPS-003 | Done | 저장소 Skill 구성 | 수직 기능 구현, 교차 스택 검증, UI 검토 Skill이 유효한 형식으로 존재 |
 | OPS-004 | Pending | UI 기준 승인 | `docs/UI_SPEC.md`의 사용자 검토 항목이 확정되고 승인 상태로 변경됨 |
 | OPS-005 | In progress | GitHub Issue 기반 Loop Engineering 확장 | Issue, Skill, PR, ruleset과 live CI 검증이 하나의 흐름으로 연결됨 |
+| OPS-006 | Blocked | 공개 저장소 LICENSE와 에셋 적용 범위 결정 | 권리·출처 감사 후 코드와 에셋의 사용 조건이 확정됨 |
+| OPS-007 | Blocked | 공개 저장소 SECURITY 정책 범위 결정 | 소유자가 범위·신고·지원 정책을 승인하고 root 정책이 검증됨 |
 
 OPS-004 관련 Issue: [#5](https://github.com/yhames/studentory/issues/5)
 
 OPS-005 관련 Issue: [#11](https://github.com/yhames/studentory/issues/11)
+
+OPS-006 관련 Issue: [#13](https://github.com/yhames/studentory/issues/13)
+
+OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ## M1 — 학생 관리 MVP
 

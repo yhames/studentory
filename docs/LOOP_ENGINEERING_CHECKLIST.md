@@ -162,8 +162,8 @@
 - [x] 브랜치가 최신 base를 반영해야 merge 가능하도록 설정한다.
 - [x] force push와 branch deletion을 차단한다.
 - [x] 관리자 우회를 허용하지 않도록 설정한다.
-- [ ] ruleset 적용 후 테스트 PR로 실패 check가 merge를 막는지 확인한다.
-- [ ] 테스트 PR에서 CI와 CodeQL 통과 후 merge 가능 상태가 되는지 확인한다.
+- [x] ruleset 적용 후 테스트 PR에서 pending check가 merge를 막는지 확인한다.
+- [x] 테스트 PR에서 CI와 CodeQL 통과 후 merge 가능 상태가 되는지 확인한다.
 - [x] ruleset 이름과 운영 방법을 `docs/CI_AND_SECURITY.md`에 기록한다.
 
 ## 5. 보안 및 공급망 운영
@@ -190,7 +190,7 @@
 - [ ] 저장소의 코드, 문서, 이미지, 아이콘, 폰트, fixture 출처를 목록화한다.
 - [ ] 외부에서 가져온 코드와 에셋의 원 라이선스를 확인한다.
 - [ ] 재배포가 금지되거나 출처 표시가 필요한 항목을 식별한다.
-- [ ] 조직명, 상표, 로고, 고객명, 내부 프로젝트명이 남아 있지 않은지 확인한다.
+- [x] 알려진 제거 대상 조직명(`교원`, `교원그룹`, `kyowon`)이 현재 tree와 Git history에 남아 있지 않은지 확인한다.
 - [ ] 실제 학생·보호자·교사 개인정보나 이를 복원할 수 있는 fixture가 없는지 확인한다.
 - [ ] Git history에도 제거 대상 이름, 개인정보, secret이 남아 있는지 별도로 점검한다.
 - [ ] 의존성 라이선스와 애플리케이션 배포 방식의 충돌 여부를 확인한다.
@@ -228,6 +228,12 @@
 
 Issue는 템플릿과 라벨을 먼저 적용한 뒤 생성한다.
 
+- [x] `OPS-006: 공개 저장소 LICENSE와 에셋 적용 범위 결정` — [#13](https://github.com/yhames/studentory/issues/13)
+  - [x] 유형: Decision
+  - [x] 영역: ops
+- [x] `OPS-007: 공개 저장소 SECURITY 정책 범위 결정` — [#14](https://github.com/yhames/studentory/issues/14)
+  - [x] 유형: Decision
+  - [x] 영역: ops
 - [x] `OPS-005: GitHub Issue 기반 Loop Engineering 확장` — [#11](https://github.com/yhames/studentory/issues/11)
   - [x] 유형: Feature
   - [x] 영역: ops
@@ -256,11 +262,11 @@ Issue는 템플릿과 라벨을 먼저 적용한 뒤 생성한다.
 
 ## 8. 권장 구현 순서
 
-- [ ] 1단계: Issue Forms, 라벨, `$github-issue`를 함께 구현한다.
-- [ ] 2단계: 기존 `$implement-feature-slice`를 Issue 입력 방식으로 확장한다.
-- [ ] 3단계: PR 템플릿과 `$github-pr`을 구현한다.
-- [ ] 4단계: `$git-commit`을 추가하고 커밋 규칙을 문서화한다.
-- [ ] 5단계: repository ruleset을 적용하고 테스트 PR로 검증한다.
+- [x] 1단계: Issue Forms, 라벨, `$github-issue`를 함께 구현한다.
+- [x] 2단계: 기존 `$implement-feature-slice`를 Issue 입력 방식으로 확장한다.
+- [x] 3단계: PR 템플릿과 `$github-pr`을 구현한다.
+- [x] 4단계: `$git-commit`을 추가하고 커밋 규칙을 문서화한다.
+- [x] 5단계: repository ruleset을 적용하고 테스트 PR로 검증한다.
 - [ ] 6단계: 권리·에셋 감사를 완료한 뒤 LICENSE를 결정한다.
 - [ ] 7단계: 초기 Roadmap Issue를 생성하고 문서와 연결한다.
 - [ ] 8단계: 첫 Issue를 전체 루프로 수행해 운영상 중복과 누락을 수정한다.
