@@ -25,8 +25,8 @@ export type DayOfWeek =
 export interface Student {
   id: number
   name: string
-  birth_year: number | null
-  gender: StudentGender | null
+  birth_year: number
+  gender: StudentGender
   stage: StudentStage
   status: StudentStatus
   special_notes: string | null
@@ -34,6 +34,16 @@ export interface Student {
 }
 
 export interface StudentPayload {
+  name: string
+  birth_year: number
+  gender: StudentGender
+  stage: StudentStage
+  status: StudentStatus
+  special_notes: string | null
+  request_notes: string | null
+}
+
+export interface StudentFormValues {
   name: string
   birth_year: number | null
   gender: StudentGender | null

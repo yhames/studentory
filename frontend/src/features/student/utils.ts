@@ -1,10 +1,11 @@
 import type {
   Student,
+  StudentFormValues,
   StudentPayload,
   StudentSchedulePayload,
 } from '../../types/students'
 
-export const emptyStudentForm: StudentPayload = {
+export const emptyStudentForm: StudentFormValues = {
   name: '',
   birth_year: null,
   gender: null,
@@ -20,10 +21,17 @@ export const emptyScheduleForm: StudentSchedulePayload = {
   effective_start_date: new Date().toISOString().slice(0, 10),
 }
 
-export function normalizeStudentPayload(payload: StudentPayload): StudentPayload {
+export function normalizeStudentPayload(payload: StudentFormValues): StudentPayload {
+  if (payload.birth_year === null || payload.gender === null) {
+    throw new Error('나이와 성별을 선택해 주세요.')
+  }
+
   return {
-    ...payload,
     name: payload.name.trim(),
+    birth_year: payload.birth_year,
+    gender: payload.gender,
+    stage: payload.stage,
+    status: payload.status,
     special_notes: emptyToNull(payload.special_notes),
     request_notes: emptyToNull(payload.request_notes),
   }
@@ -35,7 +43,7 @@ export function normalizeSchedulePayload(
   return payload
 }
 
-export function toStudentForm(student: Student): StudentPayload {
+export function toStudentForm(student: Student): StudentFormValues {
   return {
     name: student.name,
     birth_year: student.birth_year,

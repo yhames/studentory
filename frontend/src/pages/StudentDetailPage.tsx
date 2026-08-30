@@ -28,7 +28,7 @@ import {
 } from '../features/student/utils'
 import type {
   Student,
-  StudentPayload,
+  StudentFormValues,
   StudentSchedule,
   StudentSchedulePayload,
 } from '../types/students'
@@ -39,7 +39,7 @@ export function StudentDetailPage() {
   const studentId = Number(params.studentId)
   const [student, setStudent] = useState<Student | null>(null)
   const [schedules, setSchedules] = useState<StudentSchedule[]>([])
-  const [studentForm, setStudentForm] = useState<StudentPayload | null>(null)
+  const [studentForm, setStudentForm] = useState<StudentFormValues | null>(null)
   const [scheduleForm, setScheduleForm] =
     useState<StudentSchedulePayload>(emptyScheduleForm)
   const [editModalOpen, setEditModalOpen] = useState(false)
@@ -213,7 +213,7 @@ export function StudentDetailPage() {
               </div>
               <div>
                 <dt>성별</dt>
-                <dd>{student.gender === null ? '-' : genderLabels[student.gender]}</dd>
+                <dd>{genderLabels[student.gender]}</dd>
               </div>
               <div>
                 <dt>단계</dt>

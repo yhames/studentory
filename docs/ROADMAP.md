@@ -33,7 +33,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### STU-001 학생 API 계약 기준선
 
-상태: Pending
+상태: In progress
 
 관련 Issue: [#6](https://github.com/yhames/studentory/issues/6)
 
@@ -44,9 +44,26 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 - 프론트엔드 타입과 API 클라이언트가 백엔드 계약과 일치한다.
 - 관련 백엔드 검사와 프론트엔드 빌드가 통과한다.
 
+### UIR-001 Keepers Note 기반 전체 UI/UX 기준선 리팩터링
+
+상태: Pending
+
+관련 Issue: [#15](https://github.com/yhames/studentory/issues/15)
+
+수용 조건:
+
+- Keepers Note 공개 페이지에서 확인한 탐색, 정보 계층, 카드·필터, 반응형 및 장식 패턴이 `docs/UI_SPEC.md`에 기록된다.
+- 현재 구현된 App shell, 학생 목록·상세·폼, 수업 화면이 하나의 디자인 토큰과 공통 컴포넌트 체계를 사용한다.
+- 파스텔 분위기, 둥근 패널, 아이콘, 포인트 장식과 깊이감을 Studentory 업무 맥락에 맞게 재해석한다.
+- 캐릭터, 게임 이미지, 로고, 고유 문구와 브랜드 자산을 복제하지 않는다.
+- Desktop, Compact, Mobile에서 핵심 작업과 키보드 접근성이 유지된다.
+- Playwright와 프론트엔드 검증이 통과하고 `review-ui` 90점 이상 및 사용자 승인을 받는다.
+
 ### STU-002 학생 목록 상태 완성
 
 상태: Pending
+
+선행 작업: `UIR-001`
 
 관련 Issue: [#7](https://github.com/yhames/studentory/issues/7)
 
