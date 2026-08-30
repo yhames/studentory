@@ -45,7 +45,7 @@ ignore = []
 
 # Pyright 설정
 [tool.pyright]
-include = ["backend/app"]
+include = ["src/backend/app"]
 exclude = ["**/__pycache__", ".venv"]
 venvPath = "."
 venv = ".venv" # 가상환경의 타입 힌트를 올바르게 인식하도록 설정

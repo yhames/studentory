@@ -8,6 +8,7 @@ from backend.app.core.config import settings
 connect_args = {"check_same_thread": False} if settings.database_url.startswith("sqlite") else {}
 
 engine = create_engine(settings.database_url, connect_args=connect_args)
+INIT_SQL_PATH = Path(__file__).resolve().parents[4] / "init.sql"
 
 
 def init_db() -> None:
@@ -22,11 +23,22 @@ def init_db() -> None:
     SQLModel.metadata.create_all(engine)
     if settings.database_url.startswith("sqlite"):
         _ensure_sqlite_common_columns()
+    seed_test_data()  # Comment out this line when demo data is no longer needed.
 
 
 def get_session():
     with Session(engine) as session:
         yield session
+
+
+def seed_test_data(sql_path: Path = INIT_SQL_PATH) -> None:
+    """Load idempotent local demo data from init.sql."""
+    sql = sql_path.read_text(encoding="utf-8")
+    statements = (statement.strip() for statement in sql.split(";"))
+    with engine.begin() as connection:
+        for statement in statements:
+            if statement:
+                connection.execute(text(statement))
 
 
 def _ensure_sqlite_common_columns() -> None:

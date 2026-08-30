@@ -1,7 +1,93 @@
-# Studentory - Student Management System
+# Studentory
 
-## Overview
+Studentory는 선생님의 학생, 수업, 교재, 상담, 교육자료 업무를 한곳에서 관리하기 위한 웹 애플리케이션입니다. Notion 중심의 분산된 기록을 학생별 맥락과 일일 수업 흐름을 중심으로 통합하는 것이 목표입니다.
 
-선생님의 학생, 수업, 교재, 상담, 교육자료 관리를 위한 웹 기반 학생관리 시스템입니다.
+## 현재 범위
 
-현재 Notion 기반으로 관리하던 업무를 전용 시스템으로 전환하여 학생 정보 조회, 수업 준비, 상담 일정 관리 등의 업무 효율을 높이는 것을 목표로 합니다.
+현재 저장소에는 다음 기능의 초기 구현이 있습니다.
+
+- 학생 목록, 생성, 수정, 상세 조회
+- 학생별 정기 수업 일정 관리
+- 수업 목록, 생성, 수정, 완료, 취소
+- FastAPI API와 React 클라이언트
+
+전체 제품 범위와 미확정 규칙은 [PRODUCT_SPEC.md](PRODUCT_SPEC.md), 구현 순서와 완료 조건은 [docs/ROADMAP.md](docs/ROADMAP.md)를 기준으로 합니다. `PRODUCT_SPEC.md`의 Open Questions는 명시적으로 결정되기 전까지 구현 규칙으로 간주하지 않습니다.
+
+UI 구현과 검토는 [docs/UI_SPEC.md](docs/UI_SPEC.md)의 시각 방향, 상태 매트릭스, 평가 루브릭을 기준으로 합니다.
+
+## 기술 스택
+
+- Backend: Python 3.12, FastAPI, SQLModel, pytest, Ruff, Pyright, uv
+- Frontend: React 19, TypeScript, Vite, React Router, pnpm, Oxlint
+- Local database: SQLite
+
+## 로컬 실행
+
+### Backend
+
+```powershell
+cd backend
+Copy-Item .env.tpl .env
+uv sync
+uv run backend
+```
+
+기본 API 주소는 `http://localhost:8000`입니다. 로컬 데이터베이스는 `backend/data/studentory.db`에 생성됩니다.
+
+### Frontend
+
+새 터미널에서 실행합니다.
+
+```powershell
+cd frontend
+pnpm install
+pnpm dev
+```
+
+기본 화면 주소는 `http://localhost:5173`입니다. 다른 API 주소를 사용하려면 프론트엔드 환경에 `VITE_API_BASE_URL`을 설정합니다.
+
+## 검증
+
+저장소 루트에서 전체 검증을 실행합니다.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/verify.ps1
+```
+
+개별 검증 명령은 다음과 같습니다.
+
+```powershell
+cd backend
+uv run ruff check .
+uv run pyright
+uv run pytest
+
+cd ../frontend
+pnpm lint
+pnpm build
+```
+
+검증 스크립트는 기본적으로 설치된 의존성을 사용합니다. 의존성을 설치하거나 갱신하려면 `scripts/verify.ps1 -Install`을 사용합니다.
+
+## LLM 기반 개발 워크플로
+
+저장소 전용 Codex Skill은 `.agents/skills/`에 있습니다.
+
+- `$implement-feature-slice`: 로드맵의 수직 기능 하나를 백엔드부터 UI까지 구현
+- `$verify-cross-stack`: 변경 범위에 맞는 백엔드·프론트엔드 검증 실행
+- `$review-ui`: 실제 브라우저에서 주요 UI 상태와 상호작용 검토
+
+장기 작업은 [docs/FIRST_GOAL.md](docs/FIRST_GOAL.md)의 `/goal` 프롬프트로 시작할 수 있습니다. 각 반복은 한 가지 병목만 수정하고, 검증 결과를 [docs/LOOP_LOG.md](docs/LOOP_LOG.md)에 남깁니다.
+
+## 저장소 구조
+
+```text
+studentory/
+├── backend/            FastAPI 애플리케이션과 테스트
+├── frontend/           React 애플리케이션
+├── .agents/skills/     저장소 전용 Codex Skill
+├── docs/               로드맵, Goal, 반복 기록
+├── scripts/            공통 검증 명령
+├── AGENTS.md           저장소 작업 규칙
+└── PRODUCT_SPEC.md     제품 요구사항과 미확정 질문
+```
