@@ -84,8 +84,14 @@ pnpm e2e
 - `$implement-feature-slice`: 로드맵의 수직 기능 하나를 백엔드부터 UI까지 구현
 - `$verify-cross-stack`: 변경 범위에 맞는 백엔드·프론트엔드 검증 실행
 - `$review-ui`: 실제 브라우저에서 주요 UI 상태와 상호작용 검토
+- `$ci-failure-loop`: 실제 GitHub Actions 또는 CodeQL 실패 로그를 기반으로 복구
+- `$github-issue`: Roadmap과 제품 문서를 기반으로 GitHub Issue 추천·생성·수정·분류
+- `$git-commit`: 의도한 파일만 명시적으로 스테이징하고 검증 근거와 함께 커밋
+- `$github-pr`: Issue가 연결된 PR을 만들고 실제 CI와 CodeQL 상태까지 확인
 
 장기 작업은 [docs/FIRST_GOAL.md](docs/FIRST_GOAL.md)의 `/goal` 프롬프트로 시작할 수 있습니다. 각 반복은 한 가지 병목만 수정하고, 검증 결과를 [docs/LOOP_LOG.md](docs/LOOP_LOG.md)에 남깁니다.
+
+GitHub 작업은 `Roadmap → Issue → 구현 → 검증 → PR → Completion gate와 CodeQL → Issue 종료` 순서로 진행합니다. 운영 보강 작업과 완료 조건은 [docs/LOOP_ENGINEERING_CHECKLIST.md](docs/LOOP_ENGINEERING_CHECKLIST.md)를 기준으로 합니다.
 
 ## 저장소 구조
 

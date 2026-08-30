@@ -1,0 +1,67 @@
+name: Feature
+description: Propose one testable Studentory feature slice.
+title: "[ROADMAP-ID]: "
+labels:
+  - "type:feature"
+body:
+  - type: input
+    id: roadmap_id
+    attributes:
+      label: Roadmap ID
+      description: Use the matching ID from docs/ROADMAP.md.
+      placeholder: STU-001
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: User outcome
+      description: Describe the user-visible or developer-visible result, not an implementation detail.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and source
+      description: Link the relevant Product Spec, Roadmap, UI Spec, or decision issue.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - cross-stack
+        - backend
+        - frontend
+        - ops
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Provide observable, independently verifiable checklist items.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: List required tests, checks, browser states, and UI evidence.
+      placeholder: |
+        - [ ] Relevant automated tests
+        - [ ] Completion gate
+        - [ ] UI review and Playwright evidence, if applicable
+    validations:
+      required: true
+  - type: textarea
+    id: blockers
+    attributes:
+      label: Dependencies or blockers
+      description: Link unresolved decisions or prerequisite issues. Write "None" when there are none.
+    validations:
+      required: true
