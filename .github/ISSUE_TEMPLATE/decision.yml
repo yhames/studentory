@@ -1,0 +1,50 @@
+name: Product decision
+description: Resolve a product decision that blocks implementation.
+title: "[DEC-ID]: "
+labels:
+  - "type:decision"
+body:
+  - type: input
+    id: decision_id
+    attributes:
+      label: Decision ID
+      description: Use the matching Roadmap ID or propose a stable DEC identifier.
+      placeholder: DEC-LESSON-001
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Decision question
+      description: State the single question that must be answered.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and constraints
+      description: Link sources and distinguish confirmed constraints from assumptions.
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options and trade-offs
+      description: Describe viable choices and their product, engineering, and migration consequences.
+    validations:
+      required: true
+  - type: textarea
+    id: blocked_work
+    attributes:
+      label: Blocked work
+      description: List Roadmap IDs and issues that cannot proceed until this is resolved.
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: Final decision
+      description: Complete after review with the selected option, rationale, owner, and decision date.
+      placeholder: Pending
+    validations:
+      required: true
