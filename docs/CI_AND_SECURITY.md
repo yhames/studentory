@@ -16,6 +16,14 @@ It succeeds only after:
 
 Configure the `main` branch ruleset to require `Completion gate` before merge. Do not mark a Goal complete when its required CI run is failing or still running. If the branch cannot be pushed or GitHub cannot be inspected, report CI as pending rather than passed.
 
+The reproducible ruleset definition is `.github/rulesets/main.json`. Apply it as the active `main-loop-engineering-gate` repository ruleset. It requires a pull request, blocks deletion and force pushes, requires the branch to be current with `main`, and requires these live checks:
+
+- `Completion gate`
+- `Analyze (python)`
+- `Analyze (javascript-typescript)`
+
+Ruleset configuration does not prove enforcement. Verify it with a test pull request while checks are pending or failing, then verify that the same pull request becomes mergeable after all required checks pass.
+
 Playwright uses network-level API mocks for deterministic UI flows and runs in a separate `Browser E2E` job. Add backend-connected journeys only when their data setup and cleanup are deterministic.
 
 ## Runtime feedback

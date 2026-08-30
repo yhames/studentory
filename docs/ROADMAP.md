@@ -17,12 +17,25 @@
 | OPS-002 | Done | 공통 검증 스크립트 추가 | 백엔드 정적 검사·테스트와 프론트엔드 lint·build를 한 명령으로 실행 가능 |
 | OPS-003 | Done | 저장소 Skill 구성 | 수직 기능 구현, 교차 스택 검증, UI 검토 Skill이 유효한 형식으로 존재 |
 | OPS-004 | Pending | UI 기준 승인 | `docs/UI_SPEC.md`의 사용자 검토 항목이 확정되고 승인 상태로 변경됨 |
+| OPS-005 | In progress | GitHub Issue 기반 Loop Engineering 확장 | Issue, Skill, PR, ruleset과 live CI 검증이 하나의 흐름으로 연결됨 |
+| OPS-006 | Blocked | 공개 저장소 LICENSE와 에셋 적용 범위 결정 | 권리·출처 감사 후 코드와 에셋의 사용 조건이 확정됨 |
+| OPS-007 | In progress | 공개 저장소 SECURITY 정책 범위 결정 | 소유자가 범위·신고·지원 정책을 승인하고 root 정책이 검증됨 |
+
+OPS-004 관련 Issue: [#5](https://github.com/yhames/studentory/issues/5)
+
+OPS-005 관련 Issue: [#11](https://github.com/yhames/studentory/issues/11)
+
+OPS-006 관련 Issue: [#13](https://github.com/yhames/studentory/issues/13)
+
+OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ## M1 — 학생 관리 MVP
 
 ### STU-001 학생 API 계약 기준선
 
 상태: Pending
+
+관련 Issue: [#6](https://github.com/yhames/studentory/issues/6)
 
 수용 조건:
 
@@ -35,6 +48,8 @@
 
 상태: Pending
 
+관련 Issue: [#7](https://github.com/yhames/studentory/issues/7)
+
 수용 조건:
 
 - 로딩, 빈 목록, 성공, 오류 상태가 구분되어 표시된다.
@@ -45,6 +60,8 @@
 ### STU-003 학생 생성·수정 흐름 완성
 
 상태: Pending
+
+관련 Issue: [#8](https://github.com/yhames/studentory/issues/8)
 
 수용 조건:
 
@@ -58,6 +75,8 @@
 ### STU-004 학생 상세·정기 일정 흐름 완성
 
 상태: Pending
+
+관련 Issue: [#9](https://github.com/yhames/studentory/issues/9)
 
 수용 조건:
 
@@ -73,6 +92,8 @@
 ### DEC-LESSON-001 수업 생명주기 결정
 
 상태: Blocked
+
+관련 Issue: [#10](https://github.com/yhames/studentory/issues/10)
 
 결정 필요:
 
