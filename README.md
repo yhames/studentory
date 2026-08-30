@@ -91,7 +91,7 @@ pnpm e2e
 
 장기 작업은 [docs/FIRST_GOAL.md](docs/FIRST_GOAL.md)의 `/goal` 프롬프트로 시작할 수 있습니다. 각 반복은 한 가지 병목만 수정하고, 검증 결과를 [docs/LOOP_LOG.md](docs/LOOP_LOG.md)에 남깁니다.
 
-GitHub 작업은 `Roadmap → Issue → 구현 → 검증 → PR → Completion gate와 CodeQL → Issue 종료` 순서로 진행합니다. 운영 보강 작업과 완료 조건은 [docs/LOOP_ENGINEERING_CHECKLIST.md](docs/LOOP_ENGINEERING_CHECKLIST.md)를 기준으로 합니다.
+GitHub 작업은 `Roadmap → Issue → 구현 → 검증 → PR → Completion gate와 CodeQL → Issue 종료` 순서로 진행합니다. 구현 순서와 상태는 [docs/ROADMAP.md](docs/ROADMAP.md), 반복 검증 근거는 [docs/LOOP_LOG.md](docs/LOOP_LOG.md)를 기준으로 합니다.
 
 ## 저작권과 사용
 
