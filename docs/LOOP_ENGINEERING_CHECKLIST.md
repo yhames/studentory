@@ -153,18 +153,18 @@
 
 ## 4. GitHub 최종 Gate 강제
 
-- [ ] `main` 대상 repository ruleset을 생성한다.
-- [ ] Pull Request를 통해서만 `main`에 반영되도록 설정한다.
-- [ ] 필수 status check 이름을 실제 Actions job 이름에서 확인한다.
-- [ ] `Completion gate`를 필수 check로 지정한다.
-- [ ] CodeQL의 Python 분석을 필수 check로 지정할지 결정한다.
-- [ ] CodeQL의 JavaScript/TypeScript 분석을 필수 check로 지정할지 결정한다.
-- [ ] 브랜치가 최신 base를 반영해야 merge 가능한지 결정한다.
-- [ ] force push와 branch deletion을 차단한다.
-- [ ] 관리자 우회 허용 여부를 명시적으로 결정한다.
+- [x] `main` 대상 repository ruleset을 생성한다.
+- [x] Pull Request를 통해서만 `main`에 반영되도록 설정한다.
+- [x] 필수 status check 이름을 실제 Actions job 이름에서 확인한다.
+- [x] `Completion gate`를 필수 check로 지정한다.
+- [x] CodeQL의 Python 분석을 필수 check로 지정한다.
+- [x] CodeQL의 JavaScript/TypeScript 분석을 필수 check로 지정한다.
+- [x] 브랜치가 최신 base를 반영해야 merge 가능하도록 설정한다.
+- [x] force push와 branch deletion을 차단한다.
+- [x] 관리자 우회를 허용하지 않도록 설정한다.
 - [ ] ruleset 적용 후 테스트 PR로 실패 check가 merge를 막는지 확인한다.
 - [ ] 테스트 PR에서 CI와 CodeQL 통과 후 merge 가능 상태가 되는지 확인한다.
-- [ ] ruleset 이름과 운영 방법을 `docs/CI_AND_SECURITY.md`에 기록한다.
+- [x] ruleset 이름과 운영 방법을 `docs/CI_AND_SECURITY.md`에 기록한다.
 
 ## 5. 보안 및 공급망 운영
 
