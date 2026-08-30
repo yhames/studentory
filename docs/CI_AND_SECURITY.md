@@ -12,10 +12,20 @@ It succeeds only after:
 
 - backend formatting, lint, type-check, and tests pass
 - frontend lint, type-check, and build pass
+- Playwright Chromium E2E passes
 
 Configure the `main` branch ruleset to require `Completion gate` before merge. Do not mark a Goal complete when its required CI run is failing or still running. If the branch cannot be pushed or GitHub cannot be inspected, report CI as pending rather than passed.
 
-Playwright is not part of the gate yet because this repository has no Playwright dependency or test suite. Add an E2E job to `CI` and make `Completion gate` depend on it after a stable critical-flow suite exists.
+Playwright uses network-level API mocks for deterministic UI flows and runs in a separate `Browser E2E` job. Add backend-connected journeys only when their data setup and cleanup are deterministic.
+
+## Runtime feedback
+
+Sentry is disabled when its DSN is empty. Configure it independently for each deployed service:
+
+- backend: `SENTRY_DSN`, `SENTRY_ENVIRONMENT`, `SENTRY_TRACES_SAMPLE_RATE`
+- frontend: `VITE_SENTRY_DSN`, `VITE_SENTRY_ENVIRONMENT`, `VITE_SENTRY_TRACES_SAMPLE_RATE`
+
+Do not commit DSNs or auth tokens. DSNs belong in deployment environment settings. Keep trace sampling at `0` until an explicit production sampling policy is chosen.
 
 ## Dependency feedback
 

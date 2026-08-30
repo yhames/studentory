@@ -7,6 +7,7 @@ from backend.app.api.v1.api import api_router
 from backend.app.core.config import settings
 from backend.app.core.database import init_db
 from backend.app.core.logger import setup_logging
+from backend.app.core.observability import init_sentry
 from backend.app.exception.handler import register_exception_handlers
 
 
@@ -18,6 +19,7 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     setup_logging()
+    init_sentry(settings)
     app = FastAPI(lifespan=lifespan)
     register_exception_handlers(app)
     app.add_middleware(

@@ -10,6 +10,9 @@ class Settings(BaseSettings):
 
     secret_key: str = ""
     access_token_expire_minutes: int = 10080
+    sentry_dsn: str | None = None
+    sentry_environment: str = "development"
+    sentry_traces_sample_rate: float = 0.0
 
 
 settings = Settings()

@@ -17,3 +17,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES=10080
 # 4. CORS 설정 (프론트엔드 주소 허용)
 # 리액트(3000번)나 뷰 등 프론트엔드 로컬 서버와의 통신을 허용합니다. (쉼표 없이 JSON 배열 형태로 입력 가능)
 CORS_ORIGINS=["http://localhost:3000","http://127.0.0.1:3000"]
+
+# 5. Sentry (비워두면 비활성화)
+SENTRY_DSN=""
+SENTRY_ENVIRONMENT="development"
+SENTRY_TRACES_SAMPLE_RATE=0.0

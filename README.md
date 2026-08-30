@@ -18,7 +18,8 @@ UI 구현과 검토는 [docs/UI_SPEC.md](docs/UI_SPEC.md)의 시각 방향, 상�
 ## 기술 스택
 
 - Backend: Python 3.12, FastAPI, SQLModel, pytest, Ruff, Pyright, uv
-- Frontend: React 19, TypeScript, Vite, React Router, pnpm, Oxlint
+- Frontend: React 19, TypeScript, Vite, React Router, pnpm, Oxlint, Playwright
+- Observability: Sentry SDK for FastAPI and React, disabled until DSNs are configured
 - Local database: SQLite
 
 ## 로컬 실행
@@ -46,6 +47,8 @@ pnpm dev
 
 기본 화면 주소는 `http://localhost:5173`입니다. 다른 API 주소를 사용하려면 프론트엔드 환경에 `VITE_API_BASE_URL`을 설정합니다.
 
+Sentry 설정은 [docs/CI_AND_SECURITY.md](docs/CI_AND_SECURITY.md)를 확인합니다. DSN이 비어 있으면 로컬과 CI에서 Sentry는 비활성화됩니다.
+
 ## 검증
 
 저장소 루트에서 전체 검증을 실행합니다.
@@ -68,6 +71,8 @@ cd ../frontend
 pnpm lint
 pnpm typecheck
 pnpm build
+pnpm exec playwright install chromium
+pnpm e2e
 ```
 
 검증 스크립트는 기본적으로 설치된 의존성을 사용합니다. 의존성을 설치하거나 갱신하려면 `scripts/verify.ps1 -Install`을 사용합니다.
