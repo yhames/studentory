@@ -261,10 +261,7 @@ def test_schedule_missing_required_field_api(client: TestClient) -> None:
     assert response.status_code == 422
     assert set(response.json()) == {"detail"}
     assert isinstance(response.json()["detail"], list)
-    assert any(
-        error["loc"][-1] == "effective_start_date"
-        for error in response.json()["detail"]
-    )
+    assert any(error["loc"][-1] == "effective_start_date" for error in response.json()["detail"])
 
 
 def test_schedule_ownership_mismatch_api(client: TestClient) -> None:
