@@ -228,6 +228,9 @@
 
 Issue는 템플릿과 라벨을 먼저 적용한 뒤 생성한다.
 
+- [x] `OPS-005: GitHub Issue 기반 Loop Engineering 확장` — [#11](https://github.com/yhames/studentory/issues/11)
+  - [x] 유형: Feature
+  - [x] 영역: ops
 - [x] `OPS-004: UI 기준 승인` — [#5](https://github.com/yhames/studentory/issues/5)
   - [ ] 유형: Decision 또는 Feature 중 실제 승인 절차에 맞게 선택한다.
   - [ ] `docs/UI_SPEC.md`의 미승인 항목을 수용 조건으로 연결한다.

@@ -17,8 +17,11 @@
 | OPS-002 | Done | 공통 검증 스크립트 추가 | 백엔드 정적 검사·테스트와 프론트엔드 lint·build를 한 명령으로 실행 가능 |
 | OPS-003 | Done | 저장소 Skill 구성 | 수직 기능 구현, 교차 스택 검증, UI 검토 Skill이 유효한 형식으로 존재 |
 | OPS-004 | Pending | UI 기준 승인 | `docs/UI_SPEC.md`의 사용자 검토 항목이 확정되고 승인 상태로 변경됨 |
+| OPS-005 | In progress | GitHub Issue 기반 Loop Engineering 확장 | Issue, Skill, PR, ruleset과 live CI 검증이 하나의 흐름으로 연결됨 |
 
 OPS-004 관련 Issue: [#5](https://github.com/yhames/studentory/issues/5)
+
+OPS-005 관련 Issue: [#11](https://github.com/yhames/studentory/issues/11)
 
 ## M1 — 학생 관리 MVP
 
