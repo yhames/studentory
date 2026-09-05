@@ -140,8 +140,88 @@ test('모바일은 요일별 시간표를 전환하고 페이지 가로 넘침�
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false)
 })
 
+test('현재 주의 오늘을 텍스트로 표시하고 키보드로 수업 상세를 연다', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-09-02T09:00:00'))
+  await mockLessonApi(page, [{ ...scheduledLesson(), lesson_date: '2026-09-02' }])
+  await page.goto('/lessons')
+
+  const today = page.locator('.desktop-timetable').getByRole('columnheader', { name: /수요일.*오늘/ })
+  await expect(today).toBeVisible()
+  await expect(today.getByText('오늘')).toBeVisible()
+
+  const card = page.getByRole('button', { name: /김민아 수요일 .* 16:00 수업 상세 열기/ })
+  await card.focus()
+  await card.press('Enter')
+  await expect(page.getByRole('dialog', { name: '김민아 수업 상세' })).toBeVisible()
+})
+
+test('수업 조회 오류는 빈 주간과 구분하고 다시 시도할 수 있다', async ({ page }) => {
+  let listAttempts = 0
+  await page.route(/^http:\/\/(?:localhost|127\.0\.0\.1):8000\/students(?:\?.*)?$/, (route) => route.fulfill({ json: [student] }))
+  await page.route(/^http:\/\/(?:localhost|127\.0\.0\.1):8000\/lessons(?:\/.*)?(?:\?.*)?$/, async (route) => {
+    const url = new URL(route.request().url())
+    if (url.pathname === '/lessons/generate') return route.fulfill({ json: { created_count: 0 } })
+    if (route.request().method() === 'GET' && url.pathname === '/lessons') {
+      listAttempts += 1
+      return listAttempts === 1
+        ? route.fulfill({ status: 503, json: { detail: 'internal service detail' } })
+        : route.fulfill({ json: [] })
+    }
+    return route.abort()
+  })
+
+  await page.goto('/lessons')
+  await expect(page.getByText('수업을 불러오지 못했어요')).toBeVisible()
+  await expect(page.getByText('선택한 주의 수업이 없습니다.')).toHaveCount(0)
+  await expect(page.getByText('internal service detail')).toHaveCount(0)
+
+  await page.getByRole('button', { name: '다시 시도' }).click()
+  await expect(page.getByText('선택한 주의 수업이 없습니다.')).toBeVisible()
+  expect(listAttempts).toBeGreaterThan(1)
+})
+
+test('Desktop Compact Mobile에서 오늘 수업 화면이 페이지 너비를 넘지 않는다', async ({ page }) => {
+  const consoleErrors: string[] = []
+  page.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(message.text())
+  })
+  await page.clock.setFixedTime(new Date('2026-09-02T09:00:00'))
+  await mockLessonApi(page, [{ ...scheduledLesson(), lesson_date: '2026-09-02' }])
+
+  for (const viewport of [
+    { width: 1440, height: 900, mode: 'desktop' },
+    { width: 1024, height: 768, mode: 'desktop' },
+    { width: 390, height: 844, mode: 'mobile' },
+  ] as const) {
+    await page.setViewportSize(viewport)
+    await page.goto('/lessons')
+    const timetable = page.locator(viewport.mode === 'desktop' ? '.desktop-timetable' : '.mobile-timetable')
+    await expect(timetable).toBeVisible()
+    await expect(timetable.getByText('오늘').first()).toBeVisible()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true)
+  }
+  expect(consoleErrors).toEqual([])
+})
+
+test('주간 이동은 선택한 7일 범위로 수업을 생성하고 조회한다', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-09-02T09:00:00'))
+  const state = await mockLessonApi(page, [])
+  await page.goto('/lessons')
+
+  await expect.poll(() => state.generatedRanges).toContainEqual({ date_from: '2026-08-31', date_to: '2026-09-06' })
+  await expect.poll(() => state.listRanges).toContainEqual({ date_from: '2026-08-31', date_to: '2026-09-06' })
+
+  await page.getByRole('button', { name: '다음 주' }).click()
+  await expect.poll(() => state.generatedRanges).toContainEqual({ date_from: '2026-09-07', date_to: '2026-09-13' })
+  await expect.poll(() => state.listRanges).toContainEqual({ date_from: '2026-09-07', date_to: '2026-09-13' })
+})
+
 async function mockLessonApi(page: Page, initialLessons: MockLesson[]) {
-  const state = { lessons: initialLessons }
+  const state = {
+    lessons: initialLessons,
+    generatedRanges: [] as Array<{ date_from: string, date_to: string }>,
+    listRanges: [] as Array<{ date_from: string, date_to: string }>,
+  }
   await page.route(/^http:\/\/(?:localhost|127\.0\.0\.1):8000\/students(?:\?.*)?$/, (route) => route.fulfill({ json: [student] }))
   await page.route(/^http:\/\/(?:localhost|127\.0\.0\.1):8000\/lessons(?:\/.*)?(?:\?.*)?$/, async (route) => {
     const request = route.request()
@@ -149,10 +229,12 @@ async function mockLessonApi(page: Page, initialLessons: MockLesson[]) {
     const id = Number(url.pathname.split('/')[2])
 
     if (url.pathname === '/lessons/generate') {
+      state.generatedRanges.push(request.postDataJSON() as { date_from: string, date_to: string })
       await route.fulfill({ json: { created_count: 0 } })
       return
     }
     if (request.method() === 'GET' && url.pathname === '/lessons') {
+      state.listRanges.push({ date_from: url.searchParams.get('date_from') ?? '', date_to: url.searchParams.get('date_to') ?? '' })
       await route.fulfill({ json: state.lessons })
       return
     }

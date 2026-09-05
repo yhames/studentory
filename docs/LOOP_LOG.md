@@ -109,6 +109,16 @@
 - 회귀 또는 위험: 생성 조회 범위는 현재 API 계약대로 최대 7일이다. 복수 활성 일정과 취소·보강 직접 연결은 승인된 MVP 범위 밖이다.
 - 다음 병목: PR #26의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 LES-001을 Done으로 변경했다. 사용자 머지 후 LES-002를 시작한다.
 
+### 010 — LES-002
+
+- 가설: 현재 주의 오늘을 명시하고 조회 상태와 복구 행동을 분리하면 교사가 수업 현황에 진입해 당일 업무를 더 빠르게 식별할 수 있다.
+- 변경: Issue #27과 수용 조건을 등록하고, 평일 시간표에 `오늘` 텍스트 배지를 추가했다. 모바일 요일 선택을 실제 월~금 5열로 맞추고 로딩·오류·빈 주간을 구분했으며 오류 상태에 재시도를 제공했다.
+- 실행한 검증: lesson lifecycle Playwright 8개, 전체 Playwright Chromium 19개, 로컬 TypeScript·Oxlint·Vite build, `git diff --check`.
+- 결과: 직접 실행한 검증은 통과했다. Oxlint의 기존 `LessonPage.tsx` effect 경고 1건은 유지된다. canonical frontend 스크립트는 기존 pnpm store 불일치와 registry 접근 실패로 install preflight에서 중단됐다.
+- UI 증거: Chromium에서 Desktop 1440×900, Compact 1024×768, Mobile 390×844의 오늘 표시, 반응형 모드, 페이지 overflow, 키보드 상세 진입과 console error 부재를 검증했다. UI_SPEC 루브릭은 97/100(정보 계층 -1, 가독성 -1, 작업 흐름 -1)이며 주요 작업 실패 조건은 없다.
+- 회귀 또는 위험: 주말은 승인된 시간표 범위에서 제외되어 토·일에는 `오늘` 열이 표시되지 않는다. GitHub CI는 아직 커밋과 PR이 없어 pending이다.
+- 다음 병목: 사용자 화면 검토 후 LES-002 커밋과 PR을 만들고 Completion Gate, CodeQL, GitGuardian을 확인한다.
+
 ## 기록 템플릿
 
 ```md
