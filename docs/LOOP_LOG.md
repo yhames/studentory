@@ -129,6 +129,16 @@
 - 회귀 또는 위험: 기록 저장과 완료는 기존 LES-001 계약에 따라 두 요청이므로 네트워크 실패 시 기록만 저장될 수 있다. UI가 이 부분 성공을 명시하고 완료 재시도를 제공한다.
 - 다음 병목: PR #30의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 LES-003을 Done으로 변경했다. 사용자 머지 후 M3의 첫 의사결정 항목을 구체화한다.
 
+### 012 — OPS-006
+
+- 가설: 공개 저장소에 `LICENSE`를 추가하지 않는 의도와 자체 콘텐츠·외부 의존성의 경계를 명시하면 공개 열람을 유지하면서 일반적인 재사용 허가로 오해되는 위험을 줄일 수 있다.
+- 변경: `Copyright © 2026 yhames. All rights reserved.`와 `LICENSE 없음` 정책을 README 및 `docs/COPYRIGHT_AND_ASSETS.md`에 기록했다. 추적 에셋, 외부 URL·폰트, 직접 의존성 메타데이터와 배포 제외 경계를 감사했다.
+- 실행한 검증: 추적된 이미지·폰트·미디어와 외부 asset 참조 검색, favicon Git 이력, frontend·backend 직접 의존성 license metadata, Git ignore와 GitHub license detection 확인.
+- 결과: 자체 에셋은 직접 작성된 `frontend/public/favicon.svg` 하나이며 외부 브랜드·미디어·폰트는 발견되지 않았다. 직접 의존성은 MIT·Apache-2.0·BSD 계열이고 설치 디렉터리는 Git에서 제외된다. GitHub는 라이선스를 감지하지 않는다.
+- UI 증거: 정책 문서만 변경하므로 해당 없음.
+- 회귀 또는 위험: 공개 빌드·패키지·컨테이너를 배포할 때는 전체 전이 의존성과 notice 의무를 다시 감사해야 한다. 이 문서는 법률 자문을 대체하지 않는다.
+- 다음 병목: 문서 diff와 링크를 검증하고 PR의 Completion Gate·CodeQL·GitGuardian 통과 후 OPS-006을 Done으로 변경한다.
+
 ## 기록 템플릿
 
 ```md
