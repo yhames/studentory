@@ -95,9 +95,11 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### STU-004 학생 상세·정기 일정 흐름 완성
 
-상태: In progress
+상태: Done
 
 관련 Issue: [#9](https://github.com/yhames/studentory/issues/9)
+
+완료 증거: [PR #22](https://github.com/yhames/studentory/pull/22)에서 backend 37개, Playwright 15개와 GitHub Completion Gate, CodeQL, GitGuardian 검증을 통과했다.
 
 수용 조건:
 
