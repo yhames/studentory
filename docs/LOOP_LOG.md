@@ -76,8 +76,8 @@
 - 실행한 검증: 프로젝트 로컬 Oxlint, TypeScript, Vite build, Playwright Chromium 12개. 실제 브라우저에서 생성 모달을 Desktop 1440×900, Compact 1024×768, Mobile 390×844로 검토했다.
 - 결과: TypeScript와 Vite build, Playwright 12개가 통과했다. Oxlint는 기존 `LessonPage.tsx`의 비차단 `react(set-state-in-effect)` 경고 1건만 유지한다. 생성 검증·실패·재시도, 제출 중 중복 제출과 닫기 차단, 수정 실패 후 값 유지와 성공 반영을 검증했다.
 - UI 증거: 세 viewport 모두 페이지 가로 overflow와 모달 잘림이 없고 이름 입력에 초기 포커스가 이동한다. Mobile 모달은 375px 안에 맞으며 나이 입력은 0~126세 범위로 현재 backend의 1900년 이후 출생연도 계약과 일치한다. 기존 승인 루브릭 기준 96/100을 유지한다.
-- 회귀 또는 위험: 학생 생성 후 정기 일정 저장이 실패하는 교차 요청의 원자성은 기존 API 구조상 보장되지 않는다. 이번 Issue의 재시도 검증은 학생 생성 요청 자체가 실패한 경우를 다루며, 복합 생성의 transaction API는 별도 계약 결정이 필요하다. PR required CI 전에는 Done으로 변경하지 않는다.
-- 다음 병목: 커밋과 PR을 만들고 Completion gate와 CodeQL을 확인한다.
+- 회귀 또는 위험: 학생 생성 후 정기 일정 저장이 실패하는 교차 요청의 원자성은 기존 API 구조상 보장되지 않는다. 이번 Issue의 재시도 검증은 학생 생성 요청 자체가 실패한 경우를 다루며, 복합 생성의 transaction API는 별도 계약 결정이 필요하다.
+- 다음 병목: PR #21의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 STU-003를 Done으로 변경했다. 사용자 머지 후 STU-004를 시작한다.
 
 ## 기록 템플릿
 
