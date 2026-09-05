@@ -647,6 +647,16 @@ tbody tr:last-child td {
   font-size: 14px;
 }
 
+.state-message h2 {
+  margin: 0;
+  color: var(--ink-strong);
+  font-size: 16px;
+}
+
+.schedule-info {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .state-message p {
   margin: 4px 0 0;
   color: var(--ink-muted);
@@ -1583,6 +1593,10 @@ tbody tr:last-child td {
   .student-toolbar-controls,
   .info-list,
   .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-info {
     grid-template-columns: 1fr;
   }
 
