@@ -42,7 +42,7 @@ export function StudentPage() {
   const [studentSearch, setStudentSearch] = useState('')
   const [stageFilter, setStageFilter] = useState<StudentStage | 'ALL'>('ALL')
   const [statusFilter, setStatusFilter] = useState<StudentStatus | 'ALL'>('ALL')
-  const [error, setError] = useState<string | null>(null)
+  const [loadError, setLoadError] = useState(false)
   const [modalError, setModalError] = useState<string | null>(null)
   const [createModalOpen, setCreateModalOpen] = useState(false)
 
@@ -69,7 +69,7 @@ export function StudentPage() {
 
   async function loadStudents() {
     setLoadingStudents(true)
-    setError(null)
+    setLoadError(false)
     try {
       const studentResults = await getStudents()
       const scheduleEntries = await Promise.all(
@@ -80,8 +80,10 @@ export function StudentPage() {
       )
       setStudents(studentResults)
       setSchedulesByStudentId(Object.fromEntries(scheduleEntries))
-    } catch (err) {
-      setError(getErrorMessage(err))
+    } catch {
+      setStudents([])
+      setSchedulesByStudentId({})
+      setLoadError(true)
     } finally {
       setLoadingStudents(false)
     }
@@ -159,8 +161,6 @@ export function StudentPage() {
         </div>
       </section>
 
-      {error !== null ? <p className="error-banner">{error}</p> : null}
-
       <section className="page-panel" aria-labelledby="student-table-title">
         <div className="section-heading">
           <div>
@@ -186,6 +186,14 @@ export function StudentPage() {
           filteredStudents={filteredStudents}
           schedulesByStudentId={schedulesByStudentId}
           loading={loadingStudents}
+          loadError={loadError}
+          filtersActive={studentSearch.trim() !== '' || stageFilter !== 'ALL' || statusFilter !== 'ALL'}
+          onRetry={() => void loadStudents()}
+          onClearFilters={() => {
+            setStudentSearch('')
+            setStageFilter('ALL')
+            setStatusFilter('ALL')
+          }}
           onOpenStudent={(studentId) => navigate(`/students/${studentId}`)}
         />
       </section>

@@ -16,7 +16,7 @@
 | OPS-001 | Done | 프로젝트 진입 문서 정리 | 실행, 검증, 문서, Skill 사용법이 루트 README에 명시됨 |
 | OPS-002 | Done | 공통 검증 스크립트 추가 | 백엔드 정적 검사·테스트와 프론트엔드 lint·build를 한 명령으로 실행 가능 |
 | OPS-003 | Done | 저장소 Skill 구성 | 수직 기능 구현, 교차 스택 검증, UI 검토 Skill이 유효한 형식으로 존재 |
-| OPS-004 | Pending | UI 기준 승인 | `docs/UI_SPEC.md`의 사용자 검토 항목이 확정되고 승인 상태로 변경됨 |
+| OPS-004 | Done | UI 기준 승인 | `docs/UI_SPEC.md`의 사용자 검토 항목이 확정되고 승인 상태로 변경됨 |
 | OPS-005 | In progress | GitHub Issue 기반 Loop Engineering 확장 | Issue, Skill, PR, ruleset과 live CI 검증이 하나의 흐름으로 연결됨 |
 | OPS-006 | Blocked | 공개 저장소 LICENSE와 에셋 적용 범위 결정 | 권리·출처 감사 후 코드와 에셋의 사용 조건이 확정됨 |
 | OPS-007 | In progress | 공개 저장소 SECURITY 정책 범위 결정 | 소유자가 범위·신고·지원 정책을 승인하고 root 정책이 검증됨 |
@@ -33,7 +33,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### STU-001 학생 API 계약 기준선
 
-상태: In progress
+상태: Done
 
 관련 Issue: [#6](https://github.com/yhames/studentory/issues/6)
 
@@ -46,7 +46,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### UIR-001 Keepers Note 기반 전체 UI/UX 기준선 리팩터링
 
-상태: In progress
+상태: Done
 
 관련 Issue: [#15](https://github.com/yhames/studentory/issues/15)
 
@@ -61,7 +61,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### STU-002 학생 목록 상태 완성
 
-상태: Pending
+상태: In progress
 
 선행 작업: `UIR-001`
 
