@@ -61,11 +61,13 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### STU-002 학생 목록 상태 완성
 
-상태: In progress
+상태: Done
 
 선행 작업: `UIR-001`
 
 관련 Issue: [#7](https://github.com/yhames/studentory/issues/7)
+
+완료 근거: PR [#20](https://github.com/yhames/studentory/pull/20), Playwright 9개, Completion gate와 CodeQL 통과
 
 수용 조건:
 

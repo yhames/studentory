@@ -66,8 +66,8 @@
 - 실행한 검증: 프로젝트 로컬 Oxlint, TypeScript, Vite build, Playwright Chromium 9개.
 - 결과: TypeScript와 Vite build, Playwright 9개가 통과했다. Oxlint는 기존 `LessonPage.tsx`의 비차단 `react(set-state-in-effect)` 경고 1건만 유지한다. success, empty, filtered-empty, API error와 재시도, raw 오류 차단, 키보드 상세 이동을 자동 검증했다.
 - UI 증거: 실제 API 데이터 4건과 일시적 오류 후 재시도 상태를 브라우저에서 확인했다. Desktop 1440×900, Compact 1024×768, Mobile 390×844 모두 페이지 가로 overflow가 없고 목록이 정상 표시됐다. 행에 Enter를 입력해 `/students/2` 상세로 이동하는 것을 확인했다. 전체 빈 목록과 필터 결과 없음은 격리된 Playwright에서 검증했다. 기존 UIR-001 루브릭 기준 96/100을 유지하며, 콘솔 오류는 발생시키지 않는다.
-- 회귀 또는 위험: 사용자가 UI 기준을 승인해 OPS-004 Issue #5를 닫았다. PR required CI가 통과하기 전에는 STU-002를 Done으로 변경하지 않는다.
-- 다음 병목: 커밋과 PR을 만들고 Completion gate와 CodeQL을 확인한다.
+- 회귀 또는 위험: 사용자가 UI 기준을 승인해 OPS-004 Issue #5를 닫았다. 전역 pnpm store 설정은 기존 `node_modules`와 불일치하지만 독립된 GitHub Actions에서는 영향을 받지 않았다.
+- 다음 병목: PR #20의 Backend, Frontend, Browser E2E, Completion gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 STU-002를 Done으로 변경했다. 사용자 머지 후 STU-003을 시작한다.
 
 ## 기록 템플릿
 
