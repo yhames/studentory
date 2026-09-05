@@ -23,7 +23,7 @@ export function LessonRecordModal({ lesson, studentName, value, error, submittin
   const scheduled = lesson.lesson_status === 'SCHEDULED'
   const manual = lesson.schedule_id === null
   return (
-    <Modal title={`${studentName} 수업 상세`} onClose={onClose}>
+    <Modal title={`${studentName} 수업 상세`} onClose={onClose} closeDisabled={submitting}>
       {error ? <p className="error-banner modal-error">{error}</p> : null}
       <form className="form-grid" onSubmit={onSubmit}>
         <label>수업 날짜
@@ -58,13 +58,14 @@ export function LessonRecordModal({ lesson, studentName, value, error, submittin
             {scheduled ? <button type="button" disabled={submitting} onClick={onCancelLesson}>수업 취소</button> : null}
             {lesson.lesson_status === 'CANCELED' ? <button className="primary-soft-button" type="button" disabled={submitting} onClick={onRestoreLesson}>수업 복구</button> : null}
             {lesson.lesson_status === 'COMPLETED' ? <button className="primary-soft-button" type="button" disabled={submitting} onClick={onReopenLesson}>미완료로 되돌리기</button> : null}
-            {scheduled && value.attendance_status != null ? <button className="primary-soft-button" type="button" disabled={submitting} onClick={onComplete}>수업 완료 처리</button> : null}
+            {scheduled ? <button className="primary-soft-button" type="button" disabled={submitting || value.attendance_status == null} onClick={onComplete}>수업 완료 처리</button> : null}
           </div>
           <div className="lesson-form-actions">
             <button type="button" disabled={submitting} onClick={onClose}>변경 취소</button>
             <button className="primary-button" type="submit" disabled={submitting}>저장</button>
           </div>
         </div>
+        {scheduled && value.attendance_status == null ? <p className="wide lesson-completion-help">출석 또는 결석을 입력하면 수업을 완료할 수 있어요.</p> : null}
       </form>
     </Modal>
   )

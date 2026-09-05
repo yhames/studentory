@@ -1122,6 +1122,13 @@ tbody tr:last-child td {
   font-size: 12px;
 }
 
+.lesson-completion-help {
+  margin: 2px 0 0;
+  color: var(--ink-muted);
+  font-size: 12px;
+  text-align: right;
+}
+
 .lesson-modal-actions,
 .table-actions {
   display: flex;

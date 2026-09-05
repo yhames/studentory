@@ -43,11 +43,12 @@ test('시간표 카드에서 모달 전용 기록과 수업 lifecycle을 처리�
   await expect(card).toContainText('약 9세')
   await expect(card).toContainText('수업 예정')
   await expect(page.getByRole('button', { name: '출석', exact: true })).toHaveCount(0)
-  await expect(page.getByRole('button', { name: '수업 완료 처리' })).toHaveCount(0)
 
   const dialog = page.getByRole('dialog', { name: '김민아 수업 상세' })
   await card.click()
   await expect(dialog).toBeVisible()
+  await expect(dialog.getByRole('button', { name: '수업 완료 처리' })).toBeDisabled()
+  await expect(dialog.getByText('출석 또는 결석을 입력하면 수업을 완료할 수 있어요.')).toBeVisible()
   await dialog.getByLabel('단계').fill('저장하지 않을 값')
   await dialog.getByRole('button', { name: '변경 취소' }).click()
   await card.press('Enter')
@@ -61,6 +62,7 @@ test('시간표 카드에서 모달 전용 기록과 수업 lifecycle을 처리�
 
   await dialog.getByLabel('준비').selectOption('PREPARED')
   await dialog.getByLabel('출결').selectOption('PRESENT')
+  await expect(dialog.getByRole('button', { name: '수업 완료 처리' })).toBeEnabled()
   await dialog.getByLabel('단계').fill('3-2')
   await dialog.getByRole('button', { name: '저장' }).click()
   await expect(card).toContainText('준비 완료')
@@ -216,11 +218,76 @@ test('주간 이동은 선택한 7일 범위로 수업을 생성하고 조회한
   await expect.poll(() => state.listRanges).toContainEqual({ date_from: '2026-09-07', date_to: '2026-09-13' })
 })
 
+test('기록 저장 실패 시 입력과 모달을 유지하고 내부 오류를 숨긴다', async ({ page }) => {
+  const state = await mockLessonApi(page, [scheduledLesson()])
+  state.failNextPatch = true
+  await page.goto('/lessons')
+
+  await page.getByRole('button', { name: /김민아 월요일 .* 16:00 수업 상세 열기/ }).click()
+  const dialog = page.getByRole('dialog', { name: '김민아 수업 상세' })
+  await dialog.getByLabel('특이사항').fill('다음 시간에 다시 확인')
+  await dialog.getByRole('button', { name: '저장', exact: true }).click()
+
+  await expect(dialog).toBeVisible()
+  await expect(dialog.getByLabel('특이사항')).toHaveValue('다음 시간에 다시 확인')
+  await expect(dialog.getByText('수업 기록을 저장하지 못했어요. 입력 내용을 유지했으니 다시 시도해 주세요.')).toBeVisible()
+  await expect(dialog.getByText('internal service detail')).toHaveCount(0)
+})
+
+test('기록 저장 후 완료만 실패하면 저장 결과를 유지해 완료를 재시도한다', async ({ page }) => {
+  const state = await mockLessonApi(page, [scheduledLesson()])
+  state.failNextComplete = true
+  await page.goto('/lessons')
+
+  const card = page.getByRole('button', { name: /김민아 월요일 .* 16:00 수업 상세 열기/ })
+  await card.click()
+  const dialog = page.getByRole('dialog', { name: '김민아 수업 상세' })
+  await dialog.getByLabel('출결').selectOption('ABSENT')
+  await dialog.getByLabel('수업태도').fill('집중 지원 필요')
+  await dialog.getByRole('button', { name: '수업 완료 처리' }).click()
+
+  await expect(dialog).toBeVisible()
+  await expect(dialog.getByText('기록은 저장했지만 완료 처리하지 못했어요. 다시 완료를 눌러 주세요.')).toBeVisible()
+  expect(state.lessons[0]).toMatchObject({ attendance_status: 'ABSENT', attitude_notes: '집중 지원 필요', lesson_status: 'SCHEDULED' })
+
+  await dialog.getByRole('button', { name: '수업 완료 처리' }).click()
+  await expect(dialog).toBeHidden()
+  await expect(card).toContainText('✓ 수업 완료')
+  expect(state.lessons[0]).toMatchObject({ attendance_status: 'ABSENT', attitude_notes: '집중 지원 필요', lesson_status: 'COMPLETED' })
+})
+
+test('수업 기록 모달은 Desktop Compact Mobile에서 완료 조건과 조작을 보존한다', async ({ page }) => {
+  const consoleErrors: string[] = []
+  page.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(message.text())
+  })
+  await page.clock.setFixedTime(new Date('2026-09-02T09:00:00'))
+  await mockLessonApi(page, [{ ...scheduledLesson(), lesson_date: '2026-09-02' }])
+
+  for (const viewport of [
+    { width: 1440, height: 900 },
+    { width: 1024, height: 768 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport)
+    await page.goto('/lessons')
+    await page.getByRole('button', { name: /김민아 수요일 .* 16:00 수업 상세 열기/ }).click()
+    const dialog = page.getByRole('dialog', { name: '김민아 수업 상세' })
+    await expect(dialog.getByText('출석 또는 결석을 입력하면 수업을 완료할 수 있어요.')).toBeVisible()
+    await expect(dialog.getByRole('button', { name: '수업 완료 처리' })).toBeDisabled()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true)
+    await dialog.getByRole('button', { name: '변경 취소' }).click()
+  }
+  expect(consoleErrors).toEqual([])
+})
+
 async function mockLessonApi(page: Page, initialLessons: MockLesson[]) {
   const state = {
     lessons: initialLessons,
     generatedRanges: [] as Array<{ date_from: string, date_to: string }>,
     listRanges: [] as Array<{ date_from: string, date_to: string }>,
+    failNextPatch: false,
+    failNextComplete: false,
   }
   await page.route(/^http:\/\/(?:localhost|127\.0\.0\.1):8000\/students(?:\?.*)?$/, (route) => route.fulfill({ json: [student] }))
   await page.route(/^http:\/\/(?:localhost|127\.0\.0\.1):8000\/lessons(?:\/.*)?(?:\?.*)?$/, async (route) => {
@@ -239,6 +306,11 @@ async function mockLessonApi(page: Page, initialLessons: MockLesson[]) {
       return
     }
     if (request.method() === 'PATCH') {
+      if (state.failNextPatch) {
+        state.failNextPatch = false
+        await route.fulfill({ status: 503, json: { detail: 'internal service detail' } })
+        return
+      }
       state.lessons = state.lessons.map((lesson) => lesson.id === id ? { ...lesson, ...request.postDataJSON() } : lesson)
       await route.fulfill({ json: state.lessons.find((lesson) => lesson.id === id) })
       return
@@ -248,6 +320,11 @@ async function mockLessonApi(page: Page, initialLessons: MockLesson[]) {
     } else if (url.pathname.endsWith('/restore') || url.pathname.endsWith('/reopen')) {
       updateStatus(state, id, 'SCHEDULED')
     } else if (url.pathname.endsWith('/complete')) {
+      if (state.failNextComplete) {
+        state.failNextComplete = false
+        await route.fulfill({ status: 503, json: { detail: 'internal service detail' } })
+        return
+      }
       updateStatus(state, id, 'COMPLETED')
     } else if (request.method() === 'DELETE') {
       state.lessons = state.lessons.filter((lesson) => lesson.id !== id)
