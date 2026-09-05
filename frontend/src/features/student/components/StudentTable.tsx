@@ -8,6 +8,10 @@ interface StudentTableProps {
   filteredStudents: Student[]
   schedulesByStudentId: Record<number, StudentSchedule[]>
   loading: boolean
+  loadError: boolean
+  filtersActive: boolean
+  onRetry: () => void
+  onClearFilters: () => void
   onOpenStudent: (studentId: number) => void
 }
 
@@ -16,10 +20,18 @@ export function StudentTable({
   filteredStudents,
   schedulesByStudentId,
   loading,
+  loadError,
+  filtersActive,
+  onRetry,
+  onClearFilters,
   onOpenStudent,
 }: StudentTableProps) {
   if (loading) {
     return <StateMessage icon="◌" title="학생 기록을 불러오는 중이에요" description="잠시만 기다려 주세요." />
+  }
+
+  if (loadError) {
+    return <StateMessage icon="!" title="학생 기록을 불러오지 못했어요" description="잠시 후 다시 시도해 주세요." action={<button type="button" className="secondary-button" onClick={onRetry}>다시 시도</button>} />
   }
 
   if (students.length === 0) {
@@ -27,7 +39,7 @@ export function StudentTable({
   }
 
   if (filteredStudents.length === 0) {
-    return <StateMessage icon="⌕" title="조건에 맞는 학생이 없어요" description="검색어나 단계·상태 필터를 바꿔 보세요." />
+    return <StateMessage icon="⌕" title="조건에 맞는 학생이 없어요" description="검색어나 단계·상태 필터를 바꿔 보세요." action={filtersActive ? <button type="button" className="secondary-button" onClick={onClearFilters}>필터 초기화</button> : undefined} />
   }
 
   return (
