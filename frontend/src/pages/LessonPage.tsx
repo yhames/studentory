@@ -67,7 +67,7 @@ export function LessonPage() {
     setModalError(null)
   }
 
-  async function replaceLesson(request: Promise<Lesson>) {
+  async function replaceLesson(request: Promise<Lesson>, failureMessage: string) {
     setSubmitting(true)
     setModalError(null)
     try {
@@ -75,28 +75,35 @@ export function LessonPage() {
       setLessons((current) => current.map((lesson) => lesson.id === result.id ? result : lesson))
       setSelected(result)
       return true
-    } catch (err) { setModalError(getErrorMessage(err)); return false } finally { setSubmitting(false) }
+    } catch { setModalError(failureMessage); return false } finally { setSubmitting(false) }
   }
 
   async function saveRecord(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!selected) return
     const payload = recordPayload(selected, recordForm)
-    if (await replaceLesson(updateLesson(selected.id, payload))) setSelected(null)
+    if (await replaceLesson(updateLesson(selected.id, payload), '수업 기록을 저장하지 못했어요. 입력 내용을 유지했으니 다시 시도해 주세요.')) setSelected(null)
   }
 
   async function completeSelected() {
     if (!selected) return
     setSubmitting(true)
     setModalError(null)
+    let saved: Lesson
     try {
-      const saved = await updateLesson(selected.id, {
-        ...recordPayload(selected, recordForm),
-      })
+      saved = await updateLesson(selected.id, recordPayload(selected, recordForm))
+      setLessons((current) => current.map((lesson) => lesson.id === saved.id ? saved : lesson))
+      setSelected(saved)
+    } catch {
+      setModalError('수업 기록을 저장하지 못해 완료하지 않았어요. 입력 내용을 유지했으니 다시 시도해 주세요.')
+      setSubmitting(false)
+      return
+    }
+    try {
       const completed = await completeLesson(saved.id)
       setLessons((current) => current.map((lesson) => lesson.id === completed.id ? completed : lesson))
       setSelected(null)
-    } catch (err) { setModalError(getErrorMessage(err)) } finally { setSubmitting(false) }
+    } catch { setModalError('기록은 저장했지만 완료 처리하지 못했어요. 다시 완료를 눌러 주세요.') } finally { setSubmitting(false) }
   }
 
   async function quickPreparation(lesson: Lesson) {
@@ -145,7 +152,7 @@ export function LessonPage() {
       {loading ? <StateMessage icon="◌" title="수업을 불러오는 중이에요" description="이번 주 일정을 확인하고 있습니다." /> : error ? <StateMessage icon="!" title="수업을 불러오지 못했어요" description="잠시 후 다시 시도해 주세요." action={<button type="button" className="secondary-button" onClick={() => void loadWeek()}>다시 시도</button>} /> : view === 'DATE' ? <WeeklyLessonTimetable key={dateFrom} weekStart={weekStart} lessons={lessons} studentsById={studentsById} onOpenLesson={openRecord} /> : lessons.length === 0 ? <StateMessage icon="♧" title="선택한 주의 수업이 없어요" description="수업 추가 버튼으로 수동 수업을 등록할 수 있습니다." /> : <div className="lesson-student-groups">{students.filter((student) => lessons.some((lesson) => lesson.student_id === student.id)).map((student) => <section className="lesson-group" key={student.id}><h2>{student.name}</h2><div className="lesson-group-items">{lessons.filter((lesson) => lesson.student_id === student.id).map(lessonRow)}</div></section>)}</div>}
     </section>
     {createOpen ? <LessonCreateModal value={createForm} students={students} error={modalError} submitting={submitting} onChange={setCreateForm} onSubmit={createManual} onClose={() => { if (!submitting) setCreateOpen(false) }} /> : null}
-    {selected ? <LessonRecordModal lesson={selected} studentName={studentsById.get(selected.student_id)?.name ?? `학생 #${selected.student_id}`} value={recordForm} error={modalError} submitting={submitting} onChange={setRecordForm} onSubmit={saveRecord} onComplete={() => void completeSelected()} onCancelLesson={() => { if (window.confirm('수업을 취소할까요?')) void replaceLesson(cancelLesson(selected.id)).then((ok) => { if (ok) setSelected(null) }) }} onRestoreLesson={() => void replaceLesson(restoreLesson(selected.id)).then((ok) => { if (ok) setSelected(null) })} onReopenLesson={() => { if (window.confirm('완료 처리를 취소하고 미완료 상태로 되돌릴까요?')) void replaceLesson(reopenLesson(selected.id)).then((ok) => { if (ok) setSelected(null) }) }} onDelete={() => void removeManual()} onClose={() => { if (!submitting) setSelected(null) }} /> : null}
+    {selected ? <LessonRecordModal lesson={selected} studentName={studentsById.get(selected.student_id)?.name ?? `학생 #${selected.student_id}`} value={recordForm} error={modalError} submitting={submitting} onChange={setRecordForm} onSubmit={saveRecord} onComplete={() => void completeSelected()} onCancelLesson={() => { if (window.confirm('수업을 취소할까요?')) void replaceLesson(cancelLesson(selected.id), '수업을 취소하지 못했어요. 다시 시도해 주세요.').then((ok) => { if (ok) setSelected(null) }) }} onRestoreLesson={() => void replaceLesson(restoreLesson(selected.id), '수업을 복구하지 못했어요. 다시 시도해 주세요.').then((ok) => { if (ok) setSelected(null) })} onReopenLesson={() => { if (window.confirm('완료 처리를 취소하고 미완료 상태로 되돌릴까요?')) void replaceLesson(reopenLesson(selected.id), '수업을 미완료 상태로 되돌리지 못했어요. 다시 시도해 주세요.').then((ok) => { if (ok) setSelected(null) }) }} onDelete={() => void removeManual()} onClose={() => { if (!submitting) setSelected(null) }} /> : null}
   </>
 }
 

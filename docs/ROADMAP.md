@@ -155,7 +155,19 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### LES-003 수업 기록과 완료 흐름
 
-상태: Pending
+상태: Done
+
+관련 Issue: [#29](https://github.com/yhames/studentory/issues/29)
+
+완료 증거: [PR #30](https://github.com/yhames/studentory/pull/30)에서 backend 51개, Playwright Chromium 22개와 Completion Gate, CodeQL, GitGuardian 검증을 통과했다.
+
+수용 조건:
+
+- 준비, 출결, 진도와 수업 메모를 모달에서 저장할 수 있다.
+- 출결 입력 뒤 명시적으로 완료하며 저장 중 중복 동작을 막는다.
+- 저장 또는 완료 실패 시 입력과 이미 저장된 기록을 보존하고 복구 가능한 오류를 표시한다.
+- 완료·취소된 수업을 명시적으로 복구하고 기존 기록을 유지한다.
+- 변경된 기록과 상태가 시간표에 즉시 반영되고 관련 API·UI 검증이 통과한다.
 
 ## 후속 마일스톤
 

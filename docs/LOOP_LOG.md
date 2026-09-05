@@ -119,6 +119,16 @@
 - 회귀 또는 위험: 주말은 승인된 시간표 범위에서 제외되어 토·일에는 `오늘` 열이 표시되지 않는다.
 - 다음 병목: PR #28의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 LES-002를 Done으로 변경했다. 사용자 머지 후 LES-003을 시작한다.
 
+### 011 — LES-003
+
+- 가설: 완료 조건을 모달에서 먼저 설명하고 기록 저장과 완료 요청의 부분 성공을 구분하면 교사가 입력을 잃지 않고 안전하게 수업 기록을 마칠 수 있다.
+- 변경: Issue #29와 수용 조건을 등록했다. 출결 전 완료 버튼과 안내를 명시하고 제출 중 모달 닫기를 차단했다. 기록 저장 또는 완료 실패 메시지를 사용자 행동 중심으로 분리하고, 기록 저장 뒤 완료만 실패하면 저장된 결과를 즉시 반영해 재시도하도록 했다.
+- 실행한 검증: backend canonical format·Ruff·Pyright·pytest 51개, 수업 API 20개, lesson lifecycle Playwright 11개, 전체 Playwright Chromium 22개, 로컬 TypeScript·Oxlint·Vite build.
+- 결과: 직접 실행한 검증은 통과했다. Oxlint의 기존 `LessonPage.tsx` effect 경고 1건은 유지된다. canonical frontend 스크립트는 기존 pnpm store 불일치와 registry 접근 실패로 install preflight에서 중단됐다.
+- UI 증거: Chromium에서 정상 기록·완료·취소·복구, 저장 실패, 완료 부분 실패와 재시도, 키보드 진입·포커스 복원, Desktop 1440×900·Compact 1024×768·Mobile 390×844의 완료 조건 안내와 page overflow, console error 부재를 검증했다. UI_SPEC 루브릭은 97/100(정보 계층 -1, 가독성 -1, 작업 흐름 -1)이며 fail-fast 결함은 없다.
+- 회귀 또는 위험: 기록 저장과 완료는 기존 LES-001 계약에 따라 두 요청이므로 네트워크 실패 시 기록만 저장될 수 있다. UI가 이 부분 성공을 명시하고 완료 재시도를 제공한다.
+- 다음 병목: PR #30의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 LES-003을 Done으로 변경했다. 사용자 머지 후 M3의 첫 의사결정 항목을 구체화한다.
+
 ## 기록 템플릿
 
 ```md
