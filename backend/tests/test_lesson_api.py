@@ -1,4 +1,19 @@
+import pytest
 from fastapi.testclient import TestClient
+
+LESSON_RESPONSE_KEYS = {
+    "id",
+    "student_id",
+    "schedule_id",
+    "lesson_date",
+    "lesson_time",
+    "lesson_status",
+    "preparation_status",
+    "attendance_status",
+    "curriculum_progress",
+    "special_notes",
+    "attitude_notes",
+}
 
 
 def test_generate_is_idempotent_and_obeys_schedule_rules(client: TestClient) -> None:
@@ -34,6 +49,42 @@ def test_generate_excludes_future_and_deleted_schedules_and_students(client: Tes
     assert response.json() == {"created_count": 0}
     too_long = client.post("/lessons/generate", json={"date_from": "2026-08-01", "date_to": "2026-08-08"})
     assert too_long.status_code == 422
+
+
+def test_manual_and_recurring_lesson_response_contract(client: TestClient) -> None:
+    student_id = _create_student(client, "Contract")
+    manual = client.post(
+        "/lessons",
+        json={"student_id": student_id, "lesson_date": "2026-08-18", "lesson_time": "13:00"},
+    )
+    assert manual.status_code == 201
+    assert set(manual.json()) == LESSON_RESPONSE_KEYS
+    assert manual.json() == {
+        "id": manual.json()["id"],
+        "student_id": student_id,
+        "schedule_id": None,
+        "lesson_date": "2026-08-18",
+        "lesson_time": "13:00:00",
+        "lesson_status": "SCHEDULED",
+        "preparation_status": "NOT_PREPARED",
+        "attendance_status": None,
+        "curriculum_progress": None,
+        "special_notes": None,
+        "attitude_notes": None,
+    }
+
+    schedule_id = _create_schedule(client, student_id, "WEDNESDAY", "2026-08-01", "15:30")
+    generated = client.post(
+        "/lessons/generate",
+        json={"date_from": "2026-08-17", "date_to": "2026-08-23"},
+    )
+    assert generated.status_code == 200
+    listed = client.get("/lessons?date_from=2026-08-17&date_to=2026-08-23").json()
+    recurring = next(item for item in listed if item["schedule_id"] == schedule_id)
+    assert set(recurring) == LESSON_RESPONSE_KEYS
+    assert recurring["schedule_id"] == schedule_id
+    assert recurring["lesson_status"] == "SCHEDULED"
+    assert recurring["preparation_status"] == "NOT_PREPARED"
 
 
 def test_manual_lesson_crud_notes_filters_and_sorting(client: TestClient) -> None:
@@ -116,6 +167,36 @@ def test_complete_requires_attendance_and_cancel_is_reversible(client: TestClien
     assert client.post("/lessons/999/reopen").status_code == 404
 
 
+def test_lifecycle_rejects_every_invalid_transition(client: TestClient) -> None:
+    student_id = _create_student(client, "Transitions")
+    scheduled_id = _create_manual_lesson(client, student_id, "2026-08-17", "13:00")
+    completed_id = _create_manual_lesson(client, student_id, "2026-08-18", "13:00")
+    canceled_id = _create_manual_lesson(client, student_id, "2026-08-19", "13:00")
+    client.patch(f"/lessons/{completed_id}", json={"attendance_status": "PRESENT"})
+    client.post(f"/lessons/{completed_id}/complete")
+    client.post(f"/lessons/{canceled_id}/cancel")
+
+    invalid_actions = {
+        scheduled_id: ("restore", "reopen"),
+        completed_id: ("complete", "cancel", "restore"),
+        canceled_id: ("complete", "cancel", "reopen"),
+    }
+    for lesson_id, actions in invalid_actions.items():
+        for action in actions:
+            response = client.post(f"/lessons/{lesson_id}/{action}")
+            assert response.status_code == 422
+            assert set(response.json()) == {"detail"}
+            assert isinstance(response.json()["detail"], str)
+
+
+@pytest.mark.parametrize("action", ["complete", "cancel", "restore", "reopen"])
+def test_lifecycle_missing_lesson_error_contract(client: TestClient, action: str) -> None:
+    response = client.post(f"/lessons/999/{action}")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Lesson not found"}
+
+
 def test_recurring_lesson_cannot_be_moved_or_deleted(client: TestClient) -> None:
     student_id = _create_student(client, "Student")
     _create_schedule(client, student_id, "MONDAY", "2026-08-01", "15:00")
@@ -128,6 +209,73 @@ def test_recurring_lesson_cannot_be_moved_or_deleted(client: TestClient) -> None
     assert move.status_code == 422
     assert delete.status_code == 422
     assert "cancel" in delete.json()["detail"].lower()
+
+
+def test_schedule_change_preserves_generated_lesson_and_creates_future_rule(client: TestClient) -> None:
+    student_id = _create_student(client, "Changed schedule")
+    schedule_id = _create_schedule(client, student_id, "MONDAY", "2026-08-01", "15:00")
+    client.post("/lessons/generate", json={"date_from": "2026-08-17", "date_to": "2026-08-23"})
+
+    changed = client.patch(
+        f"/students/{student_id}/schedules/{schedule_id}",
+        json={"day_of_week": "TUESDAY", "lesson_time": "16:30"},
+    )
+    assert changed.status_code == 200
+    generated = client.post(
+        "/lessons/generate",
+        json={"date_from": "2026-08-17", "date_to": "2026-08-23"},
+    )
+    assert generated.json() == {"created_count": 1}
+
+    lessons = client.get("/lessons?date_from=2026-08-17&date_to=2026-08-23").json()
+    assert [(item["lesson_date"], item["lesson_time"]) for item in lessons] == [
+        ("2026-08-17", "15:00:00"),
+        ("2026-08-18", "16:30:00"),
+    ]
+
+
+def test_canceled_recurring_lesson_and_manual_makeup_are_separate(client: TestClient) -> None:
+    student_id = _create_student(client, "Makeup")
+    _create_schedule(client, student_id, "MONDAY", "2026-08-01", "15:00")
+    client.post("/lessons/generate", json={"date_from": "2026-08-17", "date_to": "2026-08-23"})
+    recurring = client.get("/lessons?date_from=2026-08-17&date_to=2026-08-23").json()[0]
+
+    canceled = client.post(f"/lessons/{recurring['id']}/cancel")
+    makeup = client.post(
+        "/lessons",
+        json={"student_id": student_id, "lesson_date": "2026-08-19", "lesson_time": "17:00"},
+    )
+
+    assert canceled.json()["lesson_status"] == "CANCELED"
+    assert canceled.json()["schedule_id"] is not None
+    assert makeup.status_code == 201
+    assert makeup.json()["schedule_id"] is None
+
+
+@pytest.mark.parametrize(
+    ("method", "path", "payload"),
+    [
+        ("post", "/lessons/generate", {"date_from": "2026-08-18", "date_to": "2026-08-17"}),
+        ("post", "/lessons/generate", {"date_from": "2026-08-01", "date_to": "2026-08-08"}),
+        ("patch", "/lessons/{lesson_id}", {"lesson_time": None}),
+        ("patch", "/lessons/{lesson_id}", {"preparation_status": None}),
+        ("patch", "/lessons/{lesson_id}", {"preparation_status": "UNKNOWN"}),
+        ("patch", "/lessons/{lesson_id}", {"attendance_status": "UNKNOWN"}),
+    ],
+)
+def test_lesson_validation_error_contract(
+    client: TestClient,
+    method: str,
+    path: str,
+    payload: dict[str, object],
+) -> None:
+    student_id = _create_student(client, "Validation")
+    lesson_id = _create_manual_lesson(client, student_id, "2026-08-17", "13:00")
+    response = getattr(client, method)(path.format(lesson_id=lesson_id), json=payload)
+
+    assert response.status_code == 422
+    assert set(response.json()) == {"detail"}
+    assert isinstance(response.json()["detail"], (str, list))
 
 
 def test_missing_or_deleted_resources_and_invalid_ranges(client: TestClient) -> None:

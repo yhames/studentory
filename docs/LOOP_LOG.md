@@ -99,6 +99,16 @@
 - 회귀 또는 위험: 복수 활성 일정과 취소·보강 직접 연결은 MVP 밖이며 별도 결정 없이는 확장하지 않는다.
 - 다음 병목: DEC-LESSON-001을 Done으로 변경하고 LES-001~003의 blocker를 해제했다. 사용자 머지 후 LES-001을 시작한다.
 
+### 009 — LES-001
+
+- 가설: DEC-LESSON-001의 경계와 전체 응답 형태를 API 테스트로 고정하면 이후 수업 화면과 기록 흐름이 안정된 계약 위에서 구현된다.
+- 변경: 수동·정기 수업의 응답 필드와 기본값, 잘못된 날짜·enum·null 오류, 일정 변경 후 기존 수업 보존, 취소 수업과 별도 수동 보강 계약을 테스트했다. frontend API client에 단건 수업 조회를 추가했다.
+- 실행한 검증: backend canonical format·Ruff·Pyright·pytest 51개, 수업 API 20개, frontend 로컬 Oxlint·TypeScript·Vite build, Playwright Chromium 15개.
+- 결과: 관련 로컬 검증이 통과했다. Oxlint는 기존 `LessonPage.tsx` 경고 1건만 유지한다. canonical frontend는 기존 pnpm store 불일치와 registry 접근 실패로 install 단계에서 중단됐으며 동일 로컬 바이너리 검증은 통과했다.
+- UI 증거: 런타임 UI 변경이 없어 별도 수동 UI 검토는 수행하지 않았고 기존 Browser E2E 15개를 통과했다.
+- 회귀 또는 위험: 생성 조회 범위는 현재 API 계약대로 최대 7일이다. 복수 활성 일정과 취소·보강 직접 연결은 승인된 MVP 범위 밖이다.
+- 다음 병목: PR #26의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 LES-001을 Done으로 변경했다. 사용자 머지 후 LES-002를 시작한다.
+
 ## 기록 템플릿
 
 ```md
