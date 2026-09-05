@@ -104,6 +104,20 @@ def cancel_lesson(session: Session, lesson_id: int) -> Lesson:
     return crud_lesson.update_lesson(session, lesson, {"lesson_status": LessonStatus.CANCELED})
 
 
+def restore_lesson(session: Session, lesson_id: int) -> Lesson:
+    lesson = get_lesson(session, lesson_id)
+    if lesson.lesson_status != LessonStatus.CANCELED:
+        raise LessonValidationError("Only canceled lessons can be restored")
+    return crud_lesson.update_lesson(session, lesson, {"lesson_status": LessonStatus.SCHEDULED})
+
+
+def reopen_lesson(session: Session, lesson_id: int) -> Lesson:
+    lesson = get_lesson(session, lesson_id)
+    if lesson.lesson_status != LessonStatus.COMPLETED:
+        raise LessonValidationError("Only completed lessons can be reopened")
+    return crud_lesson.update_lesson(session, lesson, {"lesson_status": LessonStatus.SCHEDULED})
+
+
 def delete_lesson(session: Session, lesson_id: int) -> None:
     lesson = get_lesson(session, lesson_id)
     if lesson.schedule_id is not None:

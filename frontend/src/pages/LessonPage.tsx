@@ -1,15 +1,15 @@
 import type { FormEvent } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { cancelLesson, completeLesson, createLesson, deleteLesson, generateLessons, getLessons, updateLesson } from '../api/lessons'
+import { cancelLesson, completeLesson, createLesson, deleteLesson, generateLessons, getLessons, reopenLesson, restoreLesson, updateLesson } from '../api/lessons'
 import { getStudents } from '../api/students'
 import { LessonCreateModal } from '../features/lesson/components/LessonCreateModal'
 import { LessonRecordModal } from '../features/lesson/components/LessonRecordModal'
+import { WeeklyLessonTimetable } from '../features/lesson/components/WeeklyLessonTimetable'
 import { getErrorMessage } from '../features/student/utils'
 import type { Lesson, LessonCreatePayload, LessonUpdatePayload, PreparationStatus } from '../types/lessons'
 import type { Student } from '../types/students'
 
-const DAYS = ['월', '화', '수', '목', '금', '토', '일']
 const STATUS = { SCHEDULED: '예정', COMPLETED: '완료', CANCELED: '취소' } as const
 
 function dateString(date: Date) {
@@ -103,8 +103,10 @@ export function LessonPage() {
     setError(null)
     try {
       const updated = await updateLesson(lesson.id, { preparation_status })
-      setLessons((current) => current.map((item) => item.id === updated.id ? updated : item))
-    } catch (err) { setError(getErrorMessage(err)) }
+      setLessons((current) => current.map((lesson) => lesson.id === updated.id ? updated : lesson))
+    } catch (err) {
+      setError(getErrorMessage(err))
+    }
   }
 
   async function createManual(event: FormEvent<HTMLFormElement>) {
@@ -137,13 +139,13 @@ export function LessonPage() {
   }
 
   return <>
-    <header className="page-header lesson-header"><div><span className="eyebrow">Lesson Status</span><h1>수업 현황</h1><p>{dateFrom} ~ {dateTo}</p></div><div className="button-group"><button onClick={() => setWeekStart(addDays(weekStart, -7))}>이전 주</button><button onClick={() => setWeekStart(monday(new Date()))}>이번 주</button><button onClick={() => setWeekStart(addDays(weekStart, 7))}>다음 주</button></div></header>
+    <header className="page-header lesson-header"><div><span className="page-kicker"><span aria-hidden="true">◷</span> 주간 수업 기록</span><h1>수업 현황</h1><p>{dateFrom} ~ {dateTo}</p></div><div className="button-group week-controls"><button aria-label="이전 주" onClick={() => setWeekStart(addDays(weekStart, -7))}><span aria-hidden="true">←</span> 이전</button><button className="primary-soft-button" onClick={() => setWeekStart(monday(new Date()))}>이번 주</button><button aria-label="다음 주" onClick={() => setWeekStart(addDays(weekStart, 7))}>다음 <span aria-hidden="true">→</span></button></div></header>
     {error ? <p className="error-banner">{error}</p> : null}
-    <section className="page-panel"><div className="section-heading lesson-toolbar"><div className="view-switch" role="group" aria-label="보기 방식"><button className={view === 'DATE' ? 'active' : ''} onClick={() => setView('DATE')}>날짜 보기</button><button className={view === 'STUDENT' ? 'active' : ''} onClick={() => setView('STUDENT')}>학생별 보기</button></div><div className="button-group"><button disabled={loading} onClick={() => void loadWeek()}>새로고침</button><button className="primary-button" onClick={() => { setCreateForm({ student_id: 0, lesson_date: dateFrom, lesson_time: '15:00' }); setModalError(null); setCreateOpen(true) }}>수동 수업 추가</button></div></div>
-      {loading ? <p className="lesson-empty">수업을 불러오는 중입니다.</p> : lessons.length === 0 ? <p className="lesson-empty">선택한 주의 수업이 없습니다.</p> : view === 'DATE' ? <div className="lesson-week-grid">{DAYS.map((label, index) => { const date = dateString(addDays(weekStart, index)); const items = lessons.filter((lesson) => lesson.lesson_date === date); return <section className="lesson-group" key={date}><h2>{label}요일 <small>{date.slice(5)}</small></h2><div className="lesson-group-items">{items.length ? items.map(lessonRow) : <p className="muted">수업 없음</p>}</div></section> })}</div> : <div className="lesson-student-groups">{students.filter((student) => lessons.some((lesson) => lesson.student_id === student.id)).map((student) => <section className="lesson-group" key={student.id}><h2>{student.name}</h2><div className="lesson-group-items">{lessons.filter((lesson) => lesson.student_id === student.id).map(lessonRow)}</div></section>)}</div>}
+    <section className="page-panel"><div className="section-heading lesson-toolbar"><div><span className="section-kicker">수업 찾기</span><h2>이번 주 수업</h2><div className="view-switch" role="group" aria-label="보기 방식"><button className={view === 'DATE' ? 'active' : ''} aria-pressed={view === 'DATE'} onClick={() => setView('DATE')}>날짜 보기</button><button className={view === 'STUDENT' ? 'active' : ''} aria-pressed={view === 'STUDENT'} onClick={() => setView('STUDENT')}>학생별 보기</button></div></div><div className="button-group"><button className="icon-button" disabled={loading} onClick={() => void loadWeek()}><span aria-hidden="true">↻</span> 새로고침</button><button className="primary-button" onClick={() => { setCreateForm({ student_id: 0, lesson_date: dateFrom, lesson_time: '15:00' }); setModalError(null); setCreateOpen(true) }}><span aria-hidden="true">＋</span> 수업 추가</button></div></div>
+      {loading ? <p className="lesson-empty">수업을 불러오는 중입니다.</p> : view === 'DATE' ? <WeeklyLessonTimetable key={dateFrom} weekStart={weekStart} lessons={lessons} studentsById={studentsById} onOpenLesson={openRecord} /> : lessons.length === 0 ? <p className="lesson-empty">선택한 주의 수업이 없습니다.</p> : <div className="lesson-student-groups">{students.filter((student) => lessons.some((lesson) => lesson.student_id === student.id)).map((student) => <section className="lesson-group" key={student.id}><h2>{student.name}</h2><div className="lesson-group-items">{lessons.filter((lesson) => lesson.student_id === student.id).map(lessonRow)}</div></section>)}</div>}
     </section>
     {createOpen ? <LessonCreateModal value={createForm} students={students} error={modalError} submitting={submitting} onChange={setCreateForm} onSubmit={createManual} onClose={() => { if (!submitting) setCreateOpen(false) }} /> : null}
-    {selected ? <LessonRecordModal lesson={selected} studentName={studentsById.get(selected.student_id)?.name ?? `학생 #${selected.student_id}`} value={recordForm} error={modalError} submitting={submitting} onChange={setRecordForm} onSubmit={saveRecord} onComplete={() => void completeSelected()} onCancelLesson={() => void replaceLesson(cancelLesson(selected.id)).then((ok) => { if (ok) setSelected(null) })} onDelete={() => void removeManual()} onClose={() => { if (!submitting) setSelected(null) }} /> : null}
+    {selected ? <LessonRecordModal lesson={selected} studentName={studentsById.get(selected.student_id)?.name ?? `학생 #${selected.student_id}`} value={recordForm} error={modalError} submitting={submitting} onChange={setRecordForm} onSubmit={saveRecord} onComplete={() => void completeSelected()} onCancelLesson={() => { if (window.confirm('수업을 취소할까요?')) void replaceLesson(cancelLesson(selected.id)).then((ok) => { if (ok) setSelected(null) }) }} onRestoreLesson={() => void replaceLesson(restoreLesson(selected.id)).then((ok) => { if (ok) setSelected(null) })} onReopenLesson={() => { if (window.confirm('완료 처리를 취소하고 미완료 상태로 되돌릴까요?')) void replaceLesson(reopenLesson(selected.id)).then((ok) => { if (ok) setSelected(null) }) }} onDelete={() => void removeManual()} onClose={() => { if (!submitting) setSelected(null) }} /> : null}
   </>
 }
 

@@ -70,7 +70,7 @@ def test_manual_lesson_crud_notes_filters_and_sorting(client: TestClient) -> Non
     assert client.get(f"/lessons/{later}").status_code == 404
 
 
-def test_complete_requires_attendance_and_cancel_preserves_record(client: TestClient) -> None:
+def test_complete_requires_attendance_and_cancel_is_reversible(client: TestClient) -> None:
     student_id = _create_student(client, "Student")
     completion_id = _create_manual_lesson(client, student_id, "2026-08-17", "13:00")
     canceled_id = _create_manual_lesson(client, student_id, "2026-08-18", "13:00")
@@ -78,12 +78,42 @@ def test_complete_requires_attendance_and_cancel_preserves_record(client: TestCl
     invalid = client.post(f"/lessons/{completion_id}/complete")
     assert invalid.status_code == 422
     client.patch(f"/lessons/{completion_id}", json={"attendance_status": "ABSENT"})
+    client.patch(
+        f"/lessons/{completion_id}",
+        json={
+            "preparation_status": "PREPARED",
+            "curriculum_progress": "2-14",
+            "special_notes": "Preserve this",
+            "attitude_notes": "Focused",
+        },
+    )
     completed = client.post(f"/lessons/{completion_id}/complete")
     assert completed.json()["lesson_status"] == "COMPLETED"
+
+    reopened = client.post(f"/lessons/{completion_id}/reopen")
+    assert reopened.status_code == 200
+    assert reopened.json() == {
+        **completed.json(),
+        "lesson_status": "SCHEDULED",
+        "preparation_status": "PREPARED",
+        "curriculum_progress": "2-14",
+        "special_notes": "Preserve this",
+        "attitude_notes": "Focused",
+    }
+    assert client.post(f"/lessons/{completion_id}/reopen").status_code == 422
 
     canceled = client.post(f"/lessons/{canceled_id}/cancel")
     assert canceled.json()["lesson_status"] == "CANCELED"
     assert client.get(f"/lessons/{canceled_id}").status_code == 200
+
+    restored = client.post(f"/lessons/{canceled_id}/restore")
+    assert restored.status_code == 200
+    assert restored.json()["id"] == canceled_id
+    assert restored.json()["lesson_status"] == "SCHEDULED"
+    assert client.post(f"/lessons/{canceled_id}/restore").status_code == 422
+    client.post(f"/lessons/{canceled_id}/cancel")
+    assert client.post(f"/lessons/{canceled_id}/reopen").status_code == 422
+    assert client.post("/lessons/999/reopen").status_code == 404
 
 
 def test_recurring_lesson_cannot_be_moved_or_deleted(client: TestClient) -> None:
