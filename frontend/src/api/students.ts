@@ -9,6 +9,16 @@ import type {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
 
+export class StudentApiError extends Error {
+  readonly status: number
+
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'StudentApiError'
+    this.status = status
+  }
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
@@ -24,7 +34,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     if (isErrorBody(body)) {
       message = typeof body.detail === 'string' ? body.detail : message
     }
-    throw new Error(message)
+    throw new StudentApiError(message, response.status)
   }
 
   if (response.status === 204) {

@@ -17,6 +17,7 @@ interface StudentFormProps {
   mode: 'create' | 'edit'
   submitting: boolean
   error: string | null
+  showSchedule?: boolean
   onChange: (value: StudentFormValues) => void
   onScheduleChange: (value: StudentSchedulePayload) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
@@ -29,6 +30,7 @@ export function StudentForm({
   mode,
   submitting,
   error,
+  showSchedule = true,
   onChange,
   onScheduleChange,
   onSubmit,
@@ -126,7 +128,7 @@ export function StudentForm({
           ))}
         </select>
       </label>
-      <label>
+      {showSchedule ? <label>
         수업요일
         <select
           required
@@ -145,8 +147,8 @@ export function StudentForm({
             </option>
           ))}
         </select>
-      </label>
-      <label>
+      </label> : null}
+      {showSchedule ? <label>
         수업시간
         <input
           required
@@ -157,8 +159,8 @@ export function StudentForm({
             onScheduleChange({ ...scheduleValue, lesson_time: event.target.value })
           }
         />
-      </label>
-      <label>
+      </label> : null}
+      {showSchedule ? <label>
         적용일
         <input
           required
@@ -172,7 +174,7 @@ export function StudentForm({
             })
           }
         />
-      </label>
+      </label> : null}
       <label className="wide">
         특이사항
         <textarea

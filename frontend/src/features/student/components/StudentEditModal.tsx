@@ -34,6 +34,7 @@ export function StudentEditModal({
         value={value}
         scheduleValue={scheduleValue}
         mode="edit"
+        showSchedule={false}
         submitting={submitting}
         error={error}
         onChange={onChange}

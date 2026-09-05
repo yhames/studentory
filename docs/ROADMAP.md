@@ -95,7 +95,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### STU-004 학생 상세·정기 일정 흐름 완성
 
-상태: Pending
+상태: In progress
 
 관련 Issue: [#9](https://github.com/yhames/studentory/issues/9)
 
