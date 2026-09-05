@@ -114,7 +114,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### DEC-LESSON-001 수업 생명주기 결정
 
-상태: In progress
+상태: Done
 
 관련 Issue: [#10](https://github.com/yhames/studentory/issues/10)
 
@@ -127,17 +127,19 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 승인 결정: `docs/decisions/DEC-LESSON-001.md`
 
+완료 증거: [PR #24](https://github.com/yhames/studentory/pull/24)에서 Completion Gate, CodeQL과 GitGuardian 검증을 통과했다.
+
 ### LES-001 수업 API 계약 기준선
 
-상태: Blocked — `DEC-LESSON-001` 필요
+상태: Pending
 
 ### LES-002 오늘의 수업 화면
 
-상태: Blocked — `DEC-LESSON-001` 필요
+상태: Pending
 
 ### LES-003 수업 기록과 완료 흐름
 
-상태: Blocked — `DEC-LESSON-001` 필요
+상태: Pending
 
 ## 후속 마일스톤
 

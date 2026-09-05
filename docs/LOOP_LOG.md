@@ -94,10 +94,10 @@
 - 가설: 수업 완료·생성·변경·취소·보강·정기 일정 개수의 authoritative 규칙을 먼저 고정하면 LES-001~003을 추측 없이 구현할 수 있다.
 - 변경: 사용자 승인 규칙을 `docs/decisions/DEC-LESSON-001.md`에 기록하고 Product Spec의 관련 Open Questions를 해소했다. 현재 API·상태·고유 제약과 일치해 migration은 필요하지 않다.
 - 실행한 검증: 문서 링크·중복 미확정 문구·diff 형식을 검토한다.
-- 결과: 로컬 문서 검토 진행 중이며 GitHub Completion Gate와 CodeQL 전에는 Done으로 변경하지 않는다.
+- 결과: PR #24의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과했다.
 - UI 증거: 제품 결정 문서만 변경하므로 해당 없음.
 - 회귀 또는 위험: 복수 활성 일정과 취소·보강 직접 연결은 MVP 밖이며 별도 결정 없이는 확장하지 않는다.
-- 다음 병목: 결정 PR의 독립 검증과 머지 후 LES-001을 시작한다.
+- 다음 병목: DEC-LESSON-001을 Done으로 변경하고 LES-001~003의 blocker를 해제했다. 사용자 머지 후 LES-001을 시작한다.
 
 ## 기록 템플릿
 
