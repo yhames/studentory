@@ -131,9 +131,11 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### LES-001 수업 API 계약 기준선
 
-상태: In progress
+상태: Done
 
 관련 Issue: [#25](https://github.com/yhames/studentory/issues/25)
+
+완료 증거: [PR #26](https://github.com/yhames/studentory/pull/26)에서 backend 51개, 수업 API 20개, Playwright 15개와 Completion Gate, CodeQL, GitGuardian 검증을 통과했다.
 
 ### LES-002 오늘의 수업 화면
 

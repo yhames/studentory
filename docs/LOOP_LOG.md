@@ -107,7 +107,7 @@
 - 결과: 관련 로컬 검증이 통과했다. Oxlint는 기존 `LessonPage.tsx` 경고 1건만 유지한다. canonical frontend는 기존 pnpm store 불일치와 registry 접근 실패로 install 단계에서 중단됐으며 동일 로컬 바이너리 검증은 통과했다.
 - UI 증거: 런타임 UI 변경이 없어 별도 수동 UI 검토는 수행하지 않았고 기존 Browser E2E 15개를 통과했다.
 - 회귀 또는 위험: 생성 조회 범위는 현재 API 계약대로 최대 7일이다. 복수 활성 일정과 취소·보강 직접 연결은 승인된 MVP 범위 밖이다.
-- 다음 병목: 전체 diff 검토 후 커밋·PR을 만들고 Completion Gate와 CodeQL을 확인한다.
+- 다음 병목: PR #26의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 LES-001을 Done으로 변경했다. 사용자 머지 후 LES-002를 시작한다.
 
 ## 기록 템플릿
 
