@@ -114,7 +114,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### DEC-LESSON-001 수업 생명주기 결정
 
-상태: Blocked
+상태: In progress
 
 관련 Issue: [#10](https://github.com/yhames/studentory/issues/10)
 
@@ -124,6 +124,8 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 - 일정으로부터 수업을 생성하는 시점과 기간
 - 일정 변경, 취소, 보강의 표현 방식
 - 여러 정기 일정 허용 여부
+
+승인 결정: `docs/decisions/DEC-LESSON-001.md`
 
 ### LES-001 수업 API 계약 기준선
 

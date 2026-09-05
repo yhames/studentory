@@ -210,7 +210,7 @@ A student's recurring lesson schedule is managed separately from the student's b
 
 A student must have at least one recurring lesson schedule while actively receiving lessons.
 
-The model should not prevent multiple recurring schedules, but whether the MVP must support multiple active schedules per student is still an open question.
+The MVP permits one active recurring schedule per student. Supporting multiple active schedules requires a separate product decision and migration.
 
 Each schedule should represent:
 
@@ -290,9 +290,7 @@ The system must support upcoming lesson visibility based on a student's recurrin
 
 Lessons may be created from a student's recurring schedule or created manually when needed.
 
-The exact strategy for creating Lesson instances is not yet finalized.
-
-Lessons may be created on demand, periodically, or through another generation process.
+Lesson instances are generated on demand for the date range viewed by the user. Generation is idempotent for each recurring schedule and lesson date. Periodic bulk generation is outside the MVP.
 
 Curriculum progress should not be automatically finalized by lesson generation.
 
@@ -310,9 +308,9 @@ COMPLETED
 CANCELED
 ```
 
-Rescheduling behavior is not yet finalized.
+Recurring lessons are not moved in place. The original lesson is canceled and a separate manual lesson is created when a makeup lesson is needed. The MVP does not persist a direct link between the canceled and makeup lessons.
 
-`RESCHEDULED` should not be treated as a confirmed persistent status until the rescheduling workflow is defined.
+Completion requires an attendance result and an explicit completion action. Curriculum progress and lesson notes remain optional. Completed and canceled lessons can be restored to `SCHEDULED` through explicit actions.
 
 ## 7.6 Attendance Status
 
@@ -959,13 +957,6 @@ Questions are ordered by implementation impact.
 ## High Impact
 
 * Is a student's current curriculum progress always derived from completed lesson history?
-* When should recurring schedules create Lesson instances?
-* How far into the future should Lesson instances be created or displayed?
-* Should lesson generation be on-demand, scheduled, or periodic?
-* What makes a lesson completed: attendance recorded, notes saved, or explicit completion action?
-* How should rescheduling be represented: editing the same lesson or canceling and creating a new lesson?
-* Are cancellation and makeup lessons required for the MVP?
-* Does the MVP need multiple active recurring schedules per student?
 * What do `1-24`, `2-12`, and `3-14` represent?
 * How many curriculum units exist per stage?
 * Is curriculum progression sequential?
