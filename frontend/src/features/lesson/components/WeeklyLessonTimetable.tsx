@@ -27,7 +27,7 @@ export function WeeklyLessonTimetable({ weekStart, lessons, studentsById, onOpen
     {lessons.length === 0 ? <p className="lesson-empty timetable-empty">선택한 주의 수업이 없습니다. 빈 시간을 확인하거나 수업을 추가할 수 있어요.</p> : null}
     <div className="weekly-timetable desktop-timetable" tabIndex={0} aria-label="주간 수업 시간표, 가로로 스크롤할 수 있습니다">
       <table>
-        <thead><tr><th className="timetable-corner" scope="col">시간</th>{dates.map(({ label, date }) => <th scope="col" key={date}><span>{label}</span><small>{date.slice(5)}</small></th>)}</tr></thead>
+        <thead><tr><th className="timetable-corner" scope="col">시간</th>{dates.map(({ label, date }) => <th className={isToday(date) ? 'timetable-today' : undefined} scope="col" key={date}><span>{label}{isToday(date) ? <em>오늘</em> : null}</span><small>{date.slice(5)}</small></th>)}</tr></thead>
         <tbody>{slots.map((slot) => <tr key={slot}>
           <th scope="row">{slot}</th>
           {dates.map(({ label, date }) => <TimetableCell key={`${date}-${slot}`} label={label} date={date} slot={slot} lessons={lessonsByCell.get(`${date}|${slot}`) ?? []} studentsById={studentsById} onOpenLesson={onOpenLesson} />)}
@@ -37,7 +37,7 @@ export function WeeklyLessonTimetable({ weekStart, lessons, studentsById, onOpen
 
     <div className="mobile-timetable">
       <div className="timetable-day-switch" role="group" aria-label="표시할 요일">
-        {dates.map(({ label, date }, index) => <button type="button" key={date} className={selectedDay === index ? 'active' : ''} aria-pressed={selectedDay === index} onClick={() => setSelectedDay(index)}><span>{label.slice(0, 1)}</span><small>{date.slice(8)}</small></button>)}
+        {dates.map(({ label, date }, index) => <button type="button" key={date} className={`${selectedDay === index ? 'active' : ''} ${isToday(date) ? 'today' : ''}`.trim()} aria-label={`${label} ${date.slice(5)}${isToday(date) ? ' 오늘' : ''}`} aria-pressed={selectedDay === index} onClick={() => setSelectedDay(index)}><span>{label.slice(0, 1)}{isToday(date) ? <em>오늘</em> : null}</span><small>{date.slice(8)}</small></button>)}
       </div>
       <div className="mobile-day-heading"><strong>{dates[selectedDay].label}</strong><span>{dates[selectedDay].date.slice(5)}</span></div>
       <div className="weekly-timetable mobile-timetable-scroll" tabIndex={0} aria-label={`${dates[selectedDay].label} 수업 시간표`}>
@@ -168,6 +168,10 @@ function dateIndex(dates: Array<{ date: string }>, value: string): number {
 
 function dateString(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+}
+
+function isToday(value: string): boolean {
+  return value === dateString(new Date())
 }
 
 function addDays(date: Date, days: number): Date {

@@ -139,7 +139,19 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### LES-002 오늘의 수업 화면
 
-상태: Pending
+상태: Done
+
+관련 Issue: [#27](https://github.com/yhames/studentory/issues/27)
+
+완료 증거: [PR #28](https://github.com/yhames/studentory/pull/28)에서 Playwright Chromium 19개와 Completion Gate, CodeQL, GitGuardian 검증을 통과했다.
+
+수용 조건:
+
+- 현재 주에서 오늘 날짜가 색상 외 텍스트로도 명확히 식별된다.
+- 수업 카드에서 학생, 시간, 수업·준비·출결 상태를 확인하고 상세 기록으로 이동할 수 있다.
+- 주간 이동마다 해당 7일 범위의 수업을 생성·조회한다.
+- 로딩, 빈 주간, API 오류와 재시도 상태가 구분된다.
+- Desktop, Compact, Mobile UI와 키보드 접근성 검증이 통과한다.
 
 ### LES-003 수업 기록과 완료 흐름
 

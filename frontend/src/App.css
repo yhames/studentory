@@ -1189,6 +1189,24 @@ tbody tr:last-child td {
   font-size: 12px;
 }
 
+.weekly-timetable thead th span em,
+.timetable-day-switch button span em {
+  display: inline-flex;
+  margin-left: 5px;
+  border-radius: 999px;
+  background: var(--lavender-100);
+  padding: 2px 5px;
+  color: var(--lavender-700);
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.weekly-timetable thead th.timetable-today {
+  box-shadow: inset 0 -3px var(--lavender-500);
+}
+
 .weekly-timetable thead th small {
   margin-top: 3px;
   color: var(--ink-muted);
@@ -1712,7 +1730,7 @@ tbody tr:last-child td {
 
   .timetable-day-switch {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 4px;
     margin-bottom: 10px;
     border-radius: 13px;
