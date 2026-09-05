@@ -24,7 +24,7 @@ export function StudentToolbar({
     <div className="student-toolbar">
       <div className="student-toolbar-controls">
         <label>
-          <span>검색</span>
+          <span><span aria-hidden="true">⌕</span> 학생 검색</span>
           <input
             type="search"
             placeholder="학생 이름 검색"
@@ -66,7 +66,7 @@ export function StudentToolbar({
         </label>
       </div>
       <button type="button" className="primary-button" onClick={onAddStudent}>
-        추가
+        <span aria-hidden="true">＋</span> 학생 추가
       </button>
     </div>
   )

@@ -62,6 +62,10 @@ export function StudentPage() {
       }),
     [stageFilter, statusFilter, studentSearch, students],
   )
+  const activeStudentCount = students.filter((student) => student.status === 'ACTIVE').length
+  const scheduledStudentCount = Object.values(schedulesByStudentId).filter(
+    (schedules) => schedules.length > 0,
+  ).length
 
   async function loadStudents() {
     setLoadingStudents(true)
@@ -127,19 +131,45 @@ export function StudentPage() {
     <>
       <header className="page-header">
         <div>
-          <span className="eyebrow">Student Management</span>
+          <span className="page-kicker"><span aria-hidden="true">♧</span> 학생 기록</span>
           <h1>학생 관리</h1>
-          <p>학생을 검색하고 상세 정보를 빠르게 확인합니다.</p>
+          <p>학생의 상태와 정기 수업을 빠르게 살펴보세요.</p>
+        </div>
+        <div className="header-decoration" aria-hidden="true">
+          <span>✦</span>
+          <strong>오늘의 학생 기록</strong>
         </div>
       </header>
+
+      <section className="summary-strip" aria-label="학생 현황 요약">
+        <div className="summary-card lilac">
+          <span>전체 학생</span>
+          <strong>{students.length}<small>명</small></strong>
+          <em>등록된 학생 기록</em>
+        </div>
+        <div className="summary-card mint">
+          <span>수업 중</span>
+          <strong>{activeStudentCount}<small>명</small></strong>
+          <em>현재 함께하는 학생</em>
+        </div>
+        <div className="summary-card peach">
+          <span>정기 일정</span>
+          <strong>{scheduledStudentCount}<small>명</small></strong>
+          <em>일정이 등록된 학생</em>
+        </div>
+      </section>
 
       {error !== null ? <p className="error-banner">{error}</p> : null}
 
       <section className="page-panel" aria-labelledby="student-table-title">
         <div className="section-heading">
-          <h2 id="student-table-title">학생 목록</h2>
-          <button type="button" onClick={() => void loadStudents()}>
-            새로고침
+          <div>
+            <span className="section-kicker">학생 찾기</span>
+            <h2 id="student-table-title">학생 목록</h2>
+            <p className="section-description">이름과 상태를 확인하고 상세 기록으로 이동하세요.</p>
+          </div>
+          <button type="button" className="icon-button" onClick={() => void loadStudents()}>
+            <span aria-hidden="true">↻</span> 새로고침
           </button>
         </div>
         <StudentToolbar

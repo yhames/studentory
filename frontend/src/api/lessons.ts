@@ -64,6 +64,14 @@ export function cancelLesson(id: number): Promise<Lesson> {
   return request<Lesson>(`/lessons/${id}/cancel`, { method: 'POST' })
 }
 
+export function restoreLesson(id: number): Promise<Lesson> {
+  return request<Lesson>(`/lessons/${id}/restore`, { method: 'POST' })
+}
+
+export function reopenLesson(id: number): Promise<Lesson> {
+  return request<Lesson>(`/lessons/${id}/reopen`, { method: 'POST' })
+}
+
 export function deleteLesson(id: number): Promise<void> {
   return request<void>(`/lessons/${id}`, { method: 'DELETE' })
 }
