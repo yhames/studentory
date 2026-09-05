@@ -116,8 +116,8 @@
 - 실행한 검증: lesson lifecycle Playwright 8개, 전체 Playwright Chromium 19개, 로컬 TypeScript·Oxlint·Vite build, `git diff --check`.
 - 결과: 직접 실행한 검증은 통과했다. Oxlint의 기존 `LessonPage.tsx` effect 경고 1건은 유지된다. canonical frontend 스크립트는 기존 pnpm store 불일치와 registry 접근 실패로 install preflight에서 중단됐다.
 - UI 증거: Chromium에서 Desktop 1440×900, Compact 1024×768, Mobile 390×844의 오늘 표시, 반응형 모드, 페이지 overflow, 키보드 상세 진입과 console error 부재를 검증했다. UI_SPEC 루브릭은 97/100(정보 계층 -1, 가독성 -1, 작업 흐름 -1)이며 주요 작업 실패 조건은 없다.
-- 회귀 또는 위험: 주말은 승인된 시간표 범위에서 제외되어 토·일에는 `오늘` 열이 표시되지 않는다. GitHub CI는 아직 커밋과 PR이 없어 pending이다.
-- 다음 병목: 사용자 화면 검토 후 LES-002 커밋과 PR을 만들고 Completion Gate, CodeQL, GitGuardian을 확인한다.
+- 회귀 또는 위험: 주말은 승인된 시간표 범위에서 제외되어 토·일에는 `오늘` 열이 표시되지 않는다.
+- 다음 병목: PR #28의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 LES-002를 Done으로 변경했다. 사용자 머지 후 LES-003을 시작한다.
 
 ## 기록 템플릿
 

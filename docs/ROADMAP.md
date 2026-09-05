@@ -139,9 +139,11 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### LES-002 오늘의 수업 화면
 
-상태: In progress
+상태: Done
 
 관련 Issue: [#27](https://github.com/yhames/studentory/issues/27)
+
+완료 증거: [PR #28](https://github.com/yhames/studentory/pull/28)에서 Playwright Chromium 19개와 Completion Gate, CodeQL, GitGuardian 검증을 통과했다.
 
 수용 조건:
 
