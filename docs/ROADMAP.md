@@ -18,7 +18,7 @@
 | OPS-003 | Done | 저장소 Skill 구성 | 수직 기능 구현, 교차 스택 검증, UI 검토 Skill이 유효한 형식으로 존재 |
 | OPS-004 | Done | UI 기준 승인 | `docs/UI_SPEC.md`의 사용자 검토 항목이 확정되고 승인 상태로 변경됨 |
 | OPS-005 | In progress | GitHub Issue 기반 Loop Engineering 확장 | Issue, Skill, PR, ruleset과 live CI 검증이 하나의 흐름으로 연결됨 |
-| OPS-006 | In progress | 공개 저장소 LICENSE와 에셋 적용 범위 결정 | 권리·출처 감사 후 코드와 에셋의 사용 조건이 확정됨 |
+| OPS-006 | Done | 공개 저장소 LICENSE와 에셋 적용 범위 결정 | 권리·출처 감사 후 코드와 에셋의 사용 조건이 확정됨 |
 | OPS-007 | In progress | 공개 저장소 SECURITY 정책 범위 결정 | 소유자가 범위·신고·지원 정책을 승인하고 root 정책이 검증됨 |
 
 OPS-004 관련 Issue: [#5](https://github.com/yhames/studentory/issues/5)
@@ -28,6 +28,8 @@ OPS-005 관련 Issue: [#11](https://github.com/yhames/studentory/issues/11)
 OPS-006 관련 Issue: [#13](https://github.com/yhames/studentory/issues/13)
 
 OPS-006 결정: 오픈 소스 `LICENSE`를 추가하지 않고 저장소 자체 콘텐츠의 모든 권리를 `yhames`가 보유한다. 감사 범위와 외부 의존성 구분은 [저작권·라이선스·에셋 정책](COPYRIGHT_AND_ASSETS.md)을 따른다.
+
+OPS-006 완료 근거: [PR #31](https://github.com/yhames/studentory/pull/31)에서 Completion Gate, CodeQL과 GitGuardian 검증을 통과했다.
 
 OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 

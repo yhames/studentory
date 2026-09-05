@@ -137,7 +137,7 @@
 - 결과: 자체 에셋은 직접 작성된 `frontend/public/favicon.svg` 하나이며 외부 브랜드·미디어·폰트는 발견되지 않았다. 직접 의존성은 MIT·Apache-2.0·BSD 계열이고 설치 디렉터리는 Git에서 제외된다. GitHub는 라이선스를 감지하지 않는다.
 - UI 증거: 정책 문서만 변경하므로 해당 없음.
 - 회귀 또는 위험: 공개 빌드·패키지·컨테이너를 배포할 때는 전체 전이 의존성과 notice 의무를 다시 감사해야 한다. 이 문서는 법률 자문을 대체하지 않는다.
-- 다음 병목: 문서 diff와 링크를 검증하고 PR의 Completion Gate·CodeQL·GitGuardian 통과 후 OPS-006을 Done으로 변경한다.
+- 다음 병목: PR #31의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 OPS-006을 Done으로 변경했다. 사용자 머지 후 Roadmap의 종료된 OPS 상태를 정합화한다.
 
 ## 기록 템플릿
 
