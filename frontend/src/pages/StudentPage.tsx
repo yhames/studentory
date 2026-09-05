@@ -14,7 +14,6 @@ import { StudentToolbar } from '../features/student/components/StudentToolbar'
 import {
   emptyStudentForm,
   emptyScheduleForm,
-  getErrorMessage,
   normalizeSchedulePayload,
   normalizeStudentPayload,
 } from '../features/student/utils'
@@ -122,8 +121,8 @@ export function StudentPage() {
       setStudentForm(emptyStudentForm)
       setScheduleForm(emptyScheduleForm)
       setCreateModalOpen(false)
-    } catch (err) {
-      setModalError(getErrorMessage(err))
+    } catch {
+      setModalError('학생을 저장하지 못했어요. 입력 내용을 확인하고 다시 시도해 주세요.')
     } finally {
       setSubmittingStudent(false)
     }

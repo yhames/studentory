@@ -78,7 +78,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### STU-003 학생 생성·수정 흐름 완성
 
-상태: Pending
+상태: In progress
 
 관련 Issue: [#8](https://github.com/yhames/studentory/issues/8)
 

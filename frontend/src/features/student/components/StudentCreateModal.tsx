@@ -29,7 +29,7 @@ export function StudentCreateModal({
   onClose,
 }: StudentCreateModalProps) {
   return (
-    <Modal title="학생 추가" onClose={onClose}>
+    <Modal title="학생 추가" closeDisabled={submitting} onClose={onClose}>
       <StudentForm
         value={value}
         scheduleValue={scheduleValue}
