@@ -43,6 +43,8 @@ export function StudentForm({
         이름
         <input
           required
+          pattern=".*\S.*"
+          title="이름을 입력해 주세요."
           disabled={submitting}
           value={value.name}
           onChange={(event) => onChange({ ...value, name: event.target.value })}
@@ -50,8 +52,11 @@ export function StudentForm({
       </label>
       <label>
         나이
-        <select
+        <input
+          type="number"
           required
+          min="0"
+          max={new Date().getFullYear() - 1900}
           disabled={submitting}
           value={age ?? ''}
           onChange={(event) =>
@@ -63,14 +68,7 @@ export function StudentForm({
                   : birthYearFromAge(Number(event.target.value)),
             })
           }
-        >
-          <option value="">선택</option>
-          {ageOptions.map((optionAge) => (
-            <option key={optionAge} value={optionAge}>
-              {optionAge}세
-            </option>
-          ))}
-        </select>
+        />
       </label>
       <label>
         성별
@@ -197,7 +195,7 @@ export function StudentForm({
       </label>
       <div className="form-actions wide">
         <button type="submit" className="primary-button" disabled={submitting}>
-          {mode === 'create' ? '저장' : '수정'}
+          {submitting ? '저장 중...' : mode === 'create' ? '저장' : '수정'}
         </button>
         <button type="button" disabled={submitting} onClick={onCancel}>
           취소
@@ -206,5 +204,3 @@ export function StudentForm({
     </form>
   )
 }
-
-const ageOptions = Array.from({ length: 14 }, (_, index) => index + 4)

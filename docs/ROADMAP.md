@@ -78,9 +78,11 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### STU-003 학생 생성·수정 흐름 완성
 
-상태: Pending
+상태: Done
 
 관련 Issue: [#8](https://github.com/yhames/studentory/issues/8)
+
+완료 증거: [PR #21](https://github.com/yhames/studentory/pull/21)에서 로컬 Playwright 12개와 GitHub Completion Gate, CodeQL, GitGuardian 검증을 통과했다.
 
 수용 조건:
 

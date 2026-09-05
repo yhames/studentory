@@ -5,16 +5,19 @@ interface ModalProps {
   title: string
   children: ReactNode
   onClose: () => void
+  closeDisabled?: boolean
 }
 
-export function Modal({ title, children, onClose }: ModalProps) {
+export function Modal({ title, children, onClose, closeDisabled = false }: ModalProps) {
   const panelRef = useRef<HTMLElement>(null)
   const titleId = useId()
   const onCloseRef = useRef(onClose)
+  const closeDisabledRef = useRef(closeDisabled)
 
   useEffect(() => {
     onCloseRef.current = onClose
-  }, [onClose])
+    closeDisabledRef.current = closeDisabled
+  }, [closeDisabled, onClose])
 
   useEffect(() => {
     const previouslyFocused = document.activeElement
@@ -26,7 +29,9 @@ export function Modal({ title, children, onClose }: ModalProps) {
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        onCloseRef.current()
+        if (!closeDisabledRef.current) {
+          onCloseRef.current()
+        }
       }
     }
 
@@ -61,7 +66,7 @@ export function Modal({ title, children, onClose }: ModalProps) {
   }
 
   return (
-    <div className="modal-backdrop" onMouseDown={onClose}>
+    <div className="modal-backdrop" onMouseDown={closeDisabled ? undefined : onClose}>
       <section
         ref={panelRef}
         className="modal-panel"
@@ -76,7 +81,7 @@ export function Modal({ title, children, onClose }: ModalProps) {
             <span className="modal-kicker">기록하기</span>
             <h2 id={titleId}>{title}</h2>
           </div>
-          <button type="button" aria-label="닫기" onClick={onClose}>
+          <button type="button" aria-label="닫기" disabled={closeDisabled} onClick={onClose}>
             <span aria-hidden="true">×</span>
           </button>
         </div>
