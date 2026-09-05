@@ -155,9 +155,11 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### LES-003 수업 기록과 완료 흐름
 
-상태: In progress
+상태: Done
 
 관련 Issue: [#29](https://github.com/yhames/studentory/issues/29)
+
+완료 증거: [PR #30](https://github.com/yhames/studentory/pull/30)에서 backend 51개, Playwright Chromium 22개와 Completion Gate, CodeQL, GitGuardian 검증을 통과했다.
 
 수용 조건:
 
