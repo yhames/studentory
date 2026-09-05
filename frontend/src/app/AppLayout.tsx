@@ -4,11 +4,11 @@ import { Sidebar } from '../components/layout/Sidebar'
 
 export function AppLayout() {
   return (
-    <main className="app-shell">
+    <div className="app-shell">
       <Sidebar />
-      <div className="main-column">
+      <main className="main-column" id="main-content">
         <Outlet />
-      </div>
-    </main>
+      </main>
+    </div>
   )
 }

@@ -46,7 +46,7 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### UIR-001 Keepers Note 기반 전체 UI/UX 기준선 리팩터링
 
-상태: Pending
+상태: In progress
 
 관련 Issue: [#15](https://github.com/yhames/studentory/issues/15)
 

@@ -163,10 +163,10 @@ export function StudentDetailPage() {
     <>
       <header className="page-header">
         <div>
-          <button type="button" className="back-button" onClick={() => navigate('/students')}>
-            학생 목록
+          <button type="button" className="back-button quiet-button" onClick={() => navigate('/students')}>
+            <span aria-hidden="true">←</span> 학생 목록
           </button>
-          <span className="eyebrow">Student Detail</span>
+          <span className="page-kicker"><span aria-hidden="true">✦</span> 학생 상세 기록</span>
           <h1>{student === null ? '학생 상세' : student.name}</h1>
           {student !== null ? (
             <p>
@@ -178,8 +178,8 @@ export function StudentDetailPage() {
         </div>
         {student !== null ? (
           <div className="button-group">
-            <button type="button" onClick={openEditModal}>
-              수정
+            <button type="button" className="primary-button" onClick={openEditModal}>
+              <span aria-hidden="true">✎</span> 정보 수정
             </button>
             <button
               type="button"
@@ -200,7 +200,10 @@ export function StudentDetailPage() {
         <div className="detail-page-grid">
           <section className="page-panel" aria-labelledby="basic-info-title">
             <div className="section-heading">
-              <h2 id="basic-info-title">기본 정보</h2>
+              <div>
+                <span className="section-kicker">한눈에 보기</span>
+                <h2 id="basic-info-title">기본 정보</h2>
+              </div>
             </div>
             <dl className="info-list">
               <div>

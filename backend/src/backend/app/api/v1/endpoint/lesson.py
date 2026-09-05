@@ -70,6 +70,16 @@ def cancel_lesson(lesson_id: int, session: SessionDep) -> Lesson:
     return lesson_service.cancel_lesson(session, lesson_id)
 
 
+@router.post("/{lesson_id}/restore", response_model=LessonResponse)
+def restore_lesson(lesson_id: int, session: SessionDep) -> Lesson:
+    return lesson_service.restore_lesson(session, lesson_id)
+
+
+@router.post("/{lesson_id}/reopen", response_model=LessonResponse)
+def reopen_lesson(lesson_id: int, session: SessionDep) -> Lesson:
+    return lesson_service.reopen_lesson(session, lesson_id)
+
+
 @router.delete("/{lesson_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_lesson(lesson_id: int, session: SessionDep) -> None:
     lesson_service.delete_lesson(session, lesson_id)
