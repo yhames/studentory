@@ -87,7 +87,7 @@
 - 결과: backend와 로컬 frontend 검증, Playwright가 통과했다. canonical frontend 스크립트는 기존 pnpm store 불일치와 registry 접근 실패로 install 단계에서 중단됐으나 동일 로컬 바이너리 검증은 통과했다.
 - UI 증거: 세 viewport에 가로 overflow가 없고 Mobile 패널은 349px, 일정 모달은 375px 안에 맞았다. 모달 첫 입력 포커스와 콘솔 오류 없음도 확인했다. 승인된 UI 루브릭 기준 96/100을 유지한다.
 - 회귀 또는 위험: backend는 현재 학생당 활성 정기 일정 하나만 허용하므로 UI도 첫 일정 하나를 관리한다. 다중 활성 일정 지원은 별도 제품 결정이 필요하다.
-- 다음 병목: 전체 diff 검토 후 커밋·PR을 만들고 Completion Gate와 CodeQL을 확인한다.
+- 다음 병목: PR #22의 Backend, Frontend, Browser E2E, Completion Gate, Python·JavaScript/TypeScript CodeQL과 GitGuardian이 모두 통과해 STU-004를 Done으로 변경했다. 사용자 머지 후 다음 Roadmap 항목을 선택한다.
 
 ## 기록 템플릿
 
