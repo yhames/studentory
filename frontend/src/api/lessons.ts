@@ -52,6 +52,10 @@ export function createLesson(payload: LessonCreatePayload): Promise<Lesson> {
   return request<Lesson>('/lessons', { method: 'POST', body: JSON.stringify(payload) })
 }
 
+export function getLesson(id: number): Promise<Lesson> {
+  return request<Lesson>(`/lessons/${id}`)
+}
+
 export function updateLesson(id: number, payload: LessonUpdatePayload): Promise<Lesson> {
   return request<Lesson>(`/lessons/${id}`, { method: 'PATCH', body: JSON.stringify(payload) })
 }

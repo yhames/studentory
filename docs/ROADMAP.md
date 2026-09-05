@@ -131,7 +131,9 @@ OPS-007 관련 Issue: [#14](https://github.com/yhames/studentory/issues/14)
 
 ### LES-001 수업 API 계약 기준선
 
-상태: Pending
+상태: In progress
+
+관련 Issue: [#25](https://github.com/yhames/studentory/issues/25)
 
 ### LES-002 오늘의 수업 화면
 
