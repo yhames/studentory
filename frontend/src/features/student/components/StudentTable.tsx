@@ -1,6 +1,7 @@
 import { dayLabels, stageLabels, statusLabels } from '../constants'
 import { formatApproximateAge } from '../utils'
 import type { Student, StudentSchedule } from '../../../types/students'
+import { StateMessage } from '../../../components/ui/StateMessage'
 
 interface StudentTableProps {
   students: Student[]
@@ -18,15 +19,15 @@ export function StudentTable({
   onOpenStudent,
 }: StudentTableProps) {
   if (loading) {
-    return <p className="muted">학생 목록을 불러오는 중입니다.</p>
+    return <StateMessage icon="◌" title="학생 기록을 불러오는 중이에요" description="잠시만 기다려 주세요." />
   }
 
   if (students.length === 0) {
-    return <p className="muted">등록된 학생이 없습니다.</p>
+    return <StateMessage icon="♧" title="아직 등록된 학생이 없어요" description="학생 추가 버튼으로 첫 학생 기록을 만들어 보세요." />
   }
 
   if (filteredStudents.length === 0) {
-    return <p className="muted">조건에 맞는 학생이 없습니다.</p>
+    return <StateMessage icon="⌕" title="조건에 맞는 학생이 없어요" description="검색어나 단계·상태 필터를 바꿔 보세요." />
   }
 
   return (
@@ -34,11 +35,10 @@ export function StudentTable({
       <table className="student-table">
         <thead>
           <tr>
-            <th>상태</th>
-            <th>수업요일</th>
-            <th>수업시간</th>
             <th>이름</th>
+            <th>상태</th>
             <th>단계</th>
+            <th>정기 수업</th>
             <th>연령</th>
           </tr>
         </thead>
@@ -59,33 +59,33 @@ export function StudentTable({
                   }
                 }}
               >
-                <td>
+                <td data-label="이름">
+                  <strong className="student-name-cell">
+                    <span className="student-avatar" aria-hidden="true">{genderEmoji(student)}</span>
+                    <span>{student.name}<small>상세 기록 보기</small></span>
+                  </strong>
+                </td>
+                <td data-label="상태">
                   <span className="badge badge-status">
                     {statusLabels[student.status]}
                   </span>
                 </td>
-                <td>
-                  {schedule === null ? (
-                    <span className="muted">-</span>
-                  ) : (
-                    <span className="badge badge-day">
-                      {dayLabels[schedule.day_of_week]}
-                    </span>
-                  )}
-                </td>
-                <td>{schedule === null ? '-' : schedule.lesson_time.slice(0, 5)}</td>
-                <td>
-                  <strong className="student-name-cell">
-                    <span aria-hidden="true">{genderEmoji(student)}</span>
-                    {student.name}
-                  </strong>
-                </td>
-                <td>
+                <td data-label="단계">
                   <span className="badge badge-stage">
                     {stageLabels[student.stage]}
                   </span>
                 </td>
-                <td>{formatApproximateAge(student.birth_year)}</td>
+                <td data-label="정기 수업">
+                  {schedule === null ? (
+                    <span className="muted">-</span>
+                  ) : (
+                    <span className="schedule-inline">
+                      <span className="badge badge-day">{dayLabels[schedule.day_of_week]}</span>
+                      <span>{schedule.lesson_time.slice(0, 5)}</span>
+                    </span>
+                  )}
+                </td>
+                <td data-label="연령">{formatApproximateAge(student.birth_year)}</td>
               </tr>
             )
           })}

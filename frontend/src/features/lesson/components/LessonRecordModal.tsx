@@ -13,15 +13,17 @@ interface Props {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   onComplete: () => void
   onCancelLesson: () => void
+  onRestoreLesson: () => void
+  onReopenLesson: () => void
   onDelete: () => void
   onClose: () => void
 }
 
-export function LessonRecordModal({ lesson, studentName, value, error, submitting, onChange, onSubmit, onComplete, onCancelLesson, onDelete, onClose }: Props) {
+export function LessonRecordModal({ lesson, studentName, value, error, submitting, onChange, onSubmit, onComplete, onCancelLesson, onRestoreLesson, onReopenLesson, onDelete, onClose }: Props) {
   const scheduled = lesson.lesson_status === 'SCHEDULED'
   const manual = lesson.schedule_id === null
   return (
-    <Modal title={`${studentName} 수업 기록`} onClose={onClose}>
+    <Modal title={`${studentName} 수업 상세`} onClose={onClose}>
       {error ? <p className="error-banner modal-error">{error}</p> : null}
       <form className="form-grid" onSubmit={onSubmit}>
         <label>수업 날짜
@@ -51,10 +53,17 @@ export function LessonRecordModal({ lesson, studentName, value, error, submittin
           <textarea value={value.attitude_notes ?? ''} onChange={(event) => onChange({ ...value, attitude_notes: event.target.value })} />
         </label>
         <div className="form-actions wide lesson-modal-actions">
-          <button className="primary-button" type="submit" disabled={submitting}>저장</button>
-          {scheduled ? <button type="button" disabled={submitting} onClick={onComplete}>완료</button> : null}
-          {scheduled ? <button type="button" disabled={submitting} onClick={onCancelLesson}>수업 취소</button> : null}
-          {manual ? <button className="danger-button" type="button" disabled={submitting} onClick={onDelete}>삭제</button> : null}
+          <div className="lesson-lifecycle-actions">
+            {manual ? <button className="danger-button" type="button" disabled={submitting} onClick={onDelete}>삭제</button> : null}
+            {scheduled ? <button type="button" disabled={submitting} onClick={onCancelLesson}>수업 취소</button> : null}
+            {lesson.lesson_status === 'CANCELED' ? <button className="primary-soft-button" type="button" disabled={submitting} onClick={onRestoreLesson}>수업 복구</button> : null}
+            {lesson.lesson_status === 'COMPLETED' ? <button className="primary-soft-button" type="button" disabled={submitting} onClick={onReopenLesson}>미완료로 되돌리기</button> : null}
+            {scheduled && value.attendance_status != null ? <button className="primary-soft-button" type="button" disabled={submitting} onClick={onComplete}>수업 완료 처리</button> : null}
+          </div>
+          <div className="lesson-form-actions">
+            <button type="button" disabled={submitting} onClick={onClose}>변경 취소</button>
+            <button className="primary-button" type="submit" disabled={submitting}>저장</button>
+          </div>
         </div>
       </form>
     </Modal>
