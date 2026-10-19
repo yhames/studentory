@@ -8,30 +8,30 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "alembic>=1.19.1",
-    "fastapi>=0.141.1",
-    "httpx2>=2.12.0",
+    "alembic>=1.20.0",
+    "fastapi>=0.143.3",
+    "httpx2>=2.13.1",
     "loguru>=0.7.3",
     "passlib>=1.7.4",
-    "pydantic-settings>=2.15.0",
-    "pyjwt[crypto]>=2.13.0",
-    "sentry-sdk[fastapi]>=2.68.1",
-    "sqlmodel>=0.0.42",
-    "uvicorn>=0.52.4",
+    "pydantic-settings>=2.16.0",
+    "pyjwt[crypto]>=2.15.1",
+    "sentry-sdk[fastapi]>=2.72.0",
+    "sqlmodel>=0.0.48",
+    "uvicorn>=0.54.0",
 ]
 
 [project.scripts]
 backend = "backend:main"
 
 [build-system]
-requires = ["uv_build>=0.12.7,<0.13.0"]
+requires = ["uv_build>=0.13.1,<0.14.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "pyright>=1.1.411",
+    "pyright>=1.1.414",
     "pytest>=9.1.1",
-    "ruff>=0.16.5",
+    "ruff>=0.17.1",
 ]
 
 # Ruff 설정
